@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import inspect
-import sys
 
 global values
 values = {}
@@ -30,4 +29,4 @@ def trace_changes(frame, event, arg):
                 ret = "DEBUG || Line {}: variable '{}' changed from {} to {}" \
                     .format(frame.f_lineno, v, values[v], local_vars[v])
                 print(ret)
-                values[v] = local_vars[v]  # update value of variable
+                values[v] = local_vars[v]  # update value of variable in local store

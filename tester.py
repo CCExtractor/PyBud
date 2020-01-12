@@ -8,12 +8,18 @@ alpha_list = ['x', 'y', 'z']
 
 
 def sample(a, b):
+    """
+    Test case 1
+    """
     x = a + b
     y = x * 2
     print('Sample: ' + str(y))
 
 
 def nested_loop():
+    """
+        Test case 2
+    """
     for number in num_list:
         print(number)
         for letter in alpha_list:
