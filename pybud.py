@@ -23,10 +23,13 @@ def trace_changes(frame, event, arg):
     variables = frame.f_code.co_varnames
     local_vars = frame.f_locals
 
-    for v in variables:
-        if v in local_vars:
+    for v in local_vars:
+        if isinstance(local_vars[v], list):  # check if current variable is a list
+            continue
+            # print("DEBUG || is list")
+        else:
             if local_vars[v] != values[v]:
-                ret = "DEBUG || Line {}: variable '{}' changed from {} to {}" \
-                    .format(frame.f_lineno, v, values[v], local_vars[v])
+                ret = "Line {}: variable '{}' changed from {} to {}" \
+                    .format(frame.f_lineno - 1, v, values[v], local_vars[v])
                 print(ret)
                 values[v] = local_vars[v]  # update value of variable in local store

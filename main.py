@@ -3,9 +3,6 @@ import sys
 
 import pybud
 
-num_list = [500, 600, 700]
-alpha_list = ['x', 'y', 'z']
-
 
 def sample(a, b):
     """
@@ -20,6 +17,9 @@ def nested_loop():
     """
         Test case 2
     """
+    num_list = [500, 600, 700]
+    alpha_list = ['x', 'y', 'z']
+
     for number in num_list:
         print(number)
         for letter in alpha_list:
@@ -30,3 +30,4 @@ sys.settrace(pybud.trace_calls)
 
 if __name__ == '__main__':
     sample(3, 2)
+    # nested_loop()
