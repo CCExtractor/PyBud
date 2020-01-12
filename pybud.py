@@ -13,6 +13,10 @@ def trace_calls(frame, event, arg):
 
     print("Currently in the " + co.co_filename + " file and the " + co.co_name + " function")
 
+    # initialize local variable store
+    for value in frame.f_code.co_varnames:
+        values[value] = None
+
     return trace_changes
 
 
@@ -23,8 +27,7 @@ def trace_changes(frame, event, arg):
     for v in variables:
         if v in local_vars:
             if local_vars[v] != values[v]:
-                ret = "Line {}: variable '{}' changed from {} to {}".format(frame.f_lineno, v, values[v], local_vars[v])
+                ret = "DEBUG || Line {}: variable '{}' changed from {} to {}" \
+                    .format(frame.f_lineno, v, values[v], local_vars[v])
                 print(ret)
                 values[v] = local_vars[v]  # update value of variable
-
-    print(frame.f_lineno)
