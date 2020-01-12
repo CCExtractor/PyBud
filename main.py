@@ -12,6 +12,8 @@ def sample(a, b):
     y = x * 2
     print('Sample: ' + str(y))
 
+    y = 0
+
 
 def nested_loop():
     """
