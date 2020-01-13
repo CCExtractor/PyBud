@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 import sys
 
-import pybud
+from pybud import trace_calls
+
+
+def main():
+    sample(3, 2)
+    # nested_loop()
 
 
 def sample(a, b):
@@ -14,13 +19,12 @@ def sample(a, b):
 
     y = 0
     num_list = [500, 600, 700]
+    num_list = [500, 600, 700]
     yes = "this is a string"
 
     num_list = [100, 200, 700, 800]
 
-    print("removing item........")
-    # del num_list[3]
-    num_list.remove(800)
+    num_list = [100, 700, 800]
 
 
 def nested_loop():
@@ -36,8 +40,6 @@ def nested_loop():
             print(letter)
 
 
-sys.settrace(pybud.trace_calls)
-
+sys.settrace(trace_calls)
 if __name__ == '__main__':
-    sample(3, 2)
-    # nested_loop()
+    main()
