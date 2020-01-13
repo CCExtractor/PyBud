@@ -16,7 +16,11 @@ def sample(a, b):
     num_list = [500, 600, 700]
     yes = "this is a string"
 
-    num_list = [100, 200, 700]
+    num_list = [100, 200, 700, 800]
+
+    print("removing item........")
+    # del num_list[3]
+    num_list.remove(800)
 
 
 def nested_loop():

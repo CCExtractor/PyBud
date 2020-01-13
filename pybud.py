@@ -3,6 +3,8 @@ import inspect
 from collections import Sequence
 from itertools import zip_longest
 
+from printout_utils import *
+
 global values
 values = {}
 
@@ -22,23 +24,31 @@ def trace_changes(frame, event, arg):
     local_vars = frame.f_locals
 
     for v in local_vars:
+        changed = True
         if v not in values:  # variable is not yet locally tracked
-            ret = "Line {}: variable '{}' was initialized to {}" \
-                .format(frame.f_lineno - 1, v, local_vars[v])
-            print(ret)
+            variable_init(frame.f_lineno - 1, v, local_vars[v])
             initialize_local_value(v, local_vars[v])
+            changed = False
         elif isinstance(local_vars[v], Sequence) and not isinstance(local_vars[v], str):
-            # check if current variable is a Sequence type (ie. list, tuple, etc.) BUT not a string
-            new_len, old_len = len(local_vars[v]), len(values[v])
-            for new, old in zip_longest(local_vars[v], values[v]):
-                if new != old:  # an item  in this Sequence variable has been modified somehow
-                    print("element changed")
+            # check if current variable is a Sequence type (ie. list, tuple, etc.), has changed, and is NOT a string
+            changed = False
+            for i, (new, old) in enumerate(zip_longest(local_vars[v], values[v])):
+                if new != old:  # an item  in this Sequence variable has been modified in some way
+                    if old is None:  # item added
+                        print("item added ", new)
+                        # values[v].insert(i, new)
+                    elif new is None:  # item removed
+                        print("item removed ", old)
+                        # values[v].pop(i)
+                    else:  # item changed
+                        print("item changed ", old, " ", new)
+                    changed = True
+
         else:
             if local_vars[v] != values[v]:
-                ret = "Line {}: variable '{}' changed from {} to {}" \
-                    .format(frame.f_lineno - 1, v, values[v], local_vars[v])
-                print(ret)
-                values[v] = local_vars[v]  # update value of variable in local store TODO: see if this can be universal
+                variable_value_change(frame.f_lineno - 1, v, values[v], local_vars[v])
+        if changed:
+            values[v] = local_vars[v]  # update value of variable in local store
 
 
 def initialize_local_value(new_var, value):
