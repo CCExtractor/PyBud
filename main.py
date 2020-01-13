@@ -10,9 +10,13 @@ def sample(a, b):
     """
     x = a + b
     y = x * 2
-    print('Sample: ' + str(y))
+    print('Math test: ' + str(y))
 
     y = 0
+    num_list = [500, 600, 700]
+    yes = "this is a string"
+
+    num_list = [100, 200, 700]
 
 
 def nested_loop():
