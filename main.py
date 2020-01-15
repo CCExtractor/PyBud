@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 import sys
 
-from pybud import trace_calls
+from pybud import PyBud
 
 
 def main():
-    sample(3, 2)
+    debugger = PyBud()
+    debugger.run_debug(sample, 3, 2)
     # nested_loop()
 
 
@@ -40,6 +41,5 @@ def nested_loop():
             print(letter)
 
 
-sys.settrace(trace_calls)
 if __name__ == '__main__':
     main()
