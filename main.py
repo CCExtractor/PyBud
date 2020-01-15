@@ -21,6 +21,8 @@ def sample(a, b):
     y = x * 2
     print('Math test: ' + str(y))
 
+    fl = 1.234
+
     a_string = "this is a string"
 
     num_list = [500, 600, 700]

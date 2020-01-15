@@ -42,15 +42,12 @@ class PyBud:
         local_vars = frame.f_locals
 
         for v in local_vars:
-            changed = True
             if v not in self.cached_vars:  # variable is not yet locally tracked
                 variable_init(self.line, v, local_vars[v])
                 self.initialize_var(v, local_vars[v])
-                changed = False
             elif local_vars[v] != self.cached_vars[v]:
                 if isinstance(local_vars[v], Sequence) and not isinstance(local_vars[v], str):
-                    # check if current variable is a Sequence type (ie. list, tuple, etc.), has changed, and is NOT a string
-                    changed = False
+                    # check if current variable is a Sequence type (ie. list, tuple, etc.) but is NOT a string
                     for i, (new, old) in enumerate(zip_longest(local_vars[v], self.cached_vars[v])):
                         if new != old:  # an item  in this Sequence variable has been modified in some way
                             if old is None:  # item added
@@ -59,7 +56,6 @@ class PyBud:
                                 seq_item_removed(self.line, v, i, old)
                             else:  # item changed
                                 seq_item_change(self.line, v, i, old, new)
-                            changed = True
                 else:
                     variable_value_change(self.line, v, self.cached_vars[v], local_vars[v])
                 self.var_changed(v, local_vars[v])  # add change to variable change log
@@ -75,13 +71,13 @@ class PyBud:
 
         self.vars_log[new_var] = dict()
         if var_type in [int, float]:
-            self.vars_log[new_var] = {"init": log, "changes": "", "min": value, "max": value}
+            self.vars_log[new_var] = {"init": log, "changes": [], "min": value, "max": value}
         else:
-            self.vars_log[new_var] = {"init": log, "changes": ""}
+            self.vars_log[new_var] = {"init": log, "changes": []}
 
     def var_changed(self, var, new_val):
         var_key = self.vars_log[var]
-        var_key["changes"] += str(self.line) + ":> " + str(new_val) + " "
+        var_key["changes"].append(str(self.line) + ":> '" + str(new_val) + "'")
         if "min" in var_key:
             var_key["min"] = min(new_val, var_key["min"])
             var_key["max"] = max(new_val, var_key["max"])
@@ -93,5 +89,11 @@ class PyBud:
             print("\n" + var["init"])
             if "min" in var:
                 print("The range of the variable was: [" + str(var["min"]) + "," + str(var["max"]) + "]")
-            if len(var["changes"]) != 0:
-                print("Variable changed on the following lines: " + var["changes"])
+            if (c_len := len(var["changes"])) != 0:
+                ret = ""
+                for i, change in enumerate(var["changes"]):
+                    if i != c_len - 1:
+                        ret += change + ", "
+                    else:
+                        ret += change
+                print("Variable changed on the following lines: " + ret)
