@@ -14,15 +14,17 @@ def sample(a, b):
     """
     Test case 1
     """
+    x = 8
+    y = 14
+
     x = a + b
     y = x * 2
     print('Math test: ' + str(y))
 
-    y = 0
-    num_list = [500, 600, 700]
-    num_list = [500, 600, 700]
-    yes = "this is a string"
+    a_string = "this is a string"
 
+    num_list = [500, 600, 700]
+    num_list = [500, 600, 700]
     num_list = [100, 200, 700, 800]
 
     num_list = [100, 700, 800]
