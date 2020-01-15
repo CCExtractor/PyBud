@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
+import time
 
 from pybud import PyBud
 
 
 def main():
     debugger = PyBud()
-    debugger.run_debug(sample, 3, 2)
-    # nested_loop()
+    # debugger.run_debug(sample, 3, 2)
+    debugger.run_debug(nested_loop)
 
 
 def sample(a, b):
@@ -25,7 +26,7 @@ def sample(a, b):
     a_string = "this is a string"
 
     num_list = [500, 600, 700]
-    num_list = [500, 600, 700]
+
     num_list = [100, 200, 700, 800]
 
     num_list = [100, 700, 800]
@@ -40,8 +41,11 @@ def nested_loop():
 
     for number in num_list:
         print(number)
+        time.sleep(1)
         for letter in alpha_list:
             print(letter)
+
+    time.sleep(3.4)
 
 
 if __name__ == '__main__':
