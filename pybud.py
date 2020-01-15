@@ -29,7 +29,7 @@ class PyBud:
 
         function(*args)  # call the method
 
-        self.print_log()
+        self.print_log()  # printout end log
 
     def trace_calls(self, frame, event, arg):
         co = frame.f_code  # ref to code object
@@ -44,10 +44,10 @@ class PyBud:
         for v in local_vars:
             if v not in self.cached_vars:  # variable is not yet locally tracked
                 variable_init(self.line, v, local_vars[v])
-                self.initialize_var(v, local_vars[v])
+                self.var_initialize(v, local_vars[v])
             elif local_vars[v] != self.cached_vars[v]:
                 if isinstance(local_vars[v], Sequence) and not isinstance(local_vars[v], str):
-                    # check if current variable is a Sequence type (ie. list, tuple, etc.) but is NOT a string
+                    # check if current variable is a Sequence type (ie. list, tuple, etc.) but NOT a string
                     for i, (new, old) in enumerate(zip_longest(local_vars[v], self.cached_vars[v])):
                         if new != old:  # an item  in this Sequence variable has been modified in some way
                             if old is None:  # item added
@@ -58,12 +58,12 @@ class PyBud:
                                 seq_item_change(self.line, v, i, old, new)
                 else:
                     variable_value_change(self.line, v, self.cached_vars[v], local_vars[v])
-                self.var_changed(v, local_vars[v])  # add change to variable change log
+                self.var_change(v, local_vars[v])  # add change to variable change log
                 self.cached_vars[v] = local_vars[v]  # update value of variable in local store
 
         self.line = frame.f_lineno  # update line number for next run
 
-    def initialize_var(self, new_var, value):
+    def var_initialize(self, new_var, value):
         self.cached_vars[new_var] = value
         var_type = type(value)
         log = "The variable '{}' of type {} was initialized to '{}' on line {}" \
@@ -75,10 +75,10 @@ class PyBud:
         else:
             self.vars_log[new_var] = {"init": log, "changes": []}
 
-    def var_changed(self, var, new_val):
+    def var_change(self, var, new_val):
         var_key = self.vars_log[var]
         var_key["changes"].append(str(self.line) + ":> '" + str(new_val) + "'")
-        if "min" in var_key:
+        if "min" in var_key:  # this is a variable with min and max tracking
             var_key["min"] = min(new_val, var_key["min"])
             var_key["max"] = max(new_val, var_key["max"])
 
