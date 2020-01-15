@@ -12,6 +12,7 @@ class PyBud:
         self.func_name = None
         self.cached_vars = {}
         self.line = None
+        self.tracked_vars = {}
 
     def run_debug(self, function, *args):
         """
@@ -28,7 +29,7 @@ class PyBud:
 
         function(*args)  # call the method
 
-def trace_changes(frame, event, arg):
+        self.print_log()
 
     def trace_calls(self, frame, event, arg):
         co = frame.f_code  # ref to code object
@@ -69,7 +70,21 @@ def trace_changes(frame, event, arg):
 
     def initialize_var(self, new_var, value):
         self.cached_vars[new_var] = value
+        var_type = type(value)
+        log = "The variable '{}' of type '{}' was initialized to '{}' on line {}" \
+            .format(new_var, var_type, value, self.line)
 
+        self.tracked_vars[new_var] = dict()
+        if var_type in [int, float]:
+            self.tracked_vars[new_var] = {"init": log, "changes": "", "min": value, "max": value}
+        else:
+            self.tracked_vars[new_var] = {"init": log, "changes": ""}
 
-def initialize_local_value(new_var, value):
-    values[new_var] = value
+    def print_log(self):
+        print("------------Debug Finished, printing log...------------")
+
+        for var in self.tracked_vars.values():
+            print(var["init"])
+            if "min" in var:
+                print("The range of the variable was: [" + str(var["min"]) + "," + str(var["max"]) + "]")
+            print(var["changes"])
