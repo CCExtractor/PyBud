@@ -6,8 +6,8 @@ from pybud import PyBud
 
 def main():
     debugger = PyBud()
-    # debugger.run_debug(sample, 3, 2)
-    debugger.run_debug(nested_loop)
+    debugger.run_debug(sample, 3, 2)
+    # debugger.run_debug(nested_loop)
 
 
 def sample(a, b):
@@ -29,7 +29,12 @@ def sample(a, b):
 
     num_list = [100, 200, 700, 800]
 
-    num_list = [100, 700, 800]
+    num_list.remove(200)
+
+    dict_test = dict()
+
+    dict_test["one"] = 2
+    dict_test = {"one": 1, "two": 2}
 
 
 def nested_loop():
