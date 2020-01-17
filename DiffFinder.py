@@ -25,7 +25,7 @@ class DiffFinder:
 
     def var_add(self, change_path, chg):
         temp_event = {"type": "add", "var_name": self.var_name, "var_path": ""}
-        # There is a internal path within the variable to reference the addition, thus the variable has sub-elements
+        # there is a internal path within the variable to reference the addition, thus the variable has sub-elements
         if len(change_path) != 0:
             temp_event["var_path"] = change_path  # log path to addition
             for key, val in chg:
@@ -34,7 +34,7 @@ class DiffFinder:
                 temp_event["new_val"] = val
                 print("var add if")  # DEBUG
                 self.changes.append(temp_event)  # log event to changes
-        # Else the change is a list of variable name and value pairs
+        # else the change is a list of variable name and value pairs
         else:
             for path, val in chg:
                 # log values to event
@@ -59,7 +59,7 @@ class DiffFinder:
 
     def var_remove(self, change_path, chg, ):
         temp_event = {"type": "remove", "var_name": self.var_name, "var_path": ""}
-        # There is a internal path within the variable to reference the addition, thus the variable has sub-elements
+        # there is a internal path within the variable to reference the addition, thus the variable has sub-elements
         if len(change_path) != 0:
             temp_event["var_path"] = change_path  # log path to addition
             for key, val in chg:
@@ -68,7 +68,7 @@ class DiffFinder:
                 temp_event["old_val"] = val
                 print("var remove if")  # DEBUG
                 self.changes.append(temp_event)  # log event to changes
-        # Else the change is a list of variable name and value pairs
+        # else the change is a list of variable name and value pairs
         else:
             for path, val in chg:
                 # log values to event

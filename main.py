@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import time
 
-from pybud import PyBud
+from PyBud import PyBud
 
 
 def main():
