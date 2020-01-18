@@ -5,6 +5,7 @@ from pathlib import Path
 
 from pybud.ConsoleLogger import ConsoleLogger
 from pybud.PyBud import PyBud
+from pybud.tests.perform_tests import run_tests
 
 
 def parse_args():
@@ -13,7 +14,7 @@ def parse_args():
     )
 
     debugging = parser.add_argument_group(title="Debugging",
-                                      description="Debug a python function and generate an output log.")
+                                          description="Debug a python function and generate an output log.")
     debugging.add_argument(
         "-d",
         "--debug",
@@ -40,8 +41,8 @@ def parse_args():
         help="Optional: Path to write the json log file. Defaults to output.pybud if argument not used."
     )
 
-    parsing = parser.add_argument_group(title="Parsing",
-                              description="Parse a PyBud JSON output and display to console in human-readable form.")
+    parsing = parser.add_argument_group(title="Parsing and Analysis",
+                                        description="Parse a PyBud JSON output and display to console in human-readable form.")
     parsing.add_argument(
         "-p",
         "--parse",
@@ -49,6 +50,14 @@ def parse_args():
         const="output.pybud",
         metavar="FILE",
         help="Path to the json log you wish to parse into human-readable form. Defaults to output.pybud if a file is not specified."
+    )
+
+    parsing.add_argument(
+        "-t",
+        "--test",
+        action="store_true",
+        help="Test PyBud on a suite of sorting, searching, and similar algorithms. "
+             "Outputs a PyBud JSON for each function in the 'test/test_logs' package. "
     )
 
     return parser.parse_args()
@@ -66,8 +75,9 @@ def function_arg(arg):
 
 def main():
     args = parse_args()
-
-    if args.debug:
+    if args.test:
+        run_tests()
+    elif args.debug:
         mod_name = Path(args.debug).stem
         mod_spec = importlib.util.spec_from_file_location(mod_name, args.debug)
         module = importlib.util.module_from_spec(mod_spec)
