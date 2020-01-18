@@ -72,12 +72,13 @@ def main():
         mod_spec = importlib.util.spec_from_file_location(mod_name, args.debug)
         module = importlib.util.module_from_spec(mod_spec)
         mod_spec.loader.exec_module(module)
+        func = getattr(module, args.function[0])
 
         output_path = args.output
         this_args = [function_arg(arg) for arg in args.function[1:]]
 
         debugger = PyBud()
-        debugger.run_debug(output_path, module, args.function[0], this_args)
+        debugger.run_debug(output_path, func, this_args)
 
         logger = ConsoleLogger(output_path)
         logger.print_log()
