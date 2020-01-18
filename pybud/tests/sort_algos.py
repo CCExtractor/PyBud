@@ -13,22 +13,6 @@ def merge_sort(input_list):
     if len(input_list) <= 1:  # list has 1 element or less, already sorted
         return input_list
 
-    # Merge the sorted halves
-    def merge(left_half, right_half):
-        res = []
-        while len(left_half) != 0 and len(right_half) != 0:
-            if left_half[0] < right_half[0]:
-                res.append(left_half[0])
-                left_half.remove(left_half[0])
-            else:
-                res.append(right_half[0])
-                right_half.remove(right_half[0])
-        if len(left_half) == 0:
-            res = res + right_half
-        else:
-            res = res + left_half
-        return res
-
     # Find the middle point and divide it
     middle = len(input_list) // 2
     left_list = input_list[:middle]
@@ -37,6 +21,23 @@ def merge_sort(input_list):
     left_list = merge_sort(left_list)
     right_list = merge_sort(right_list)
     return list(merge(left_list, right_list))
+
+
+# Merge the sorted halves
+def merge(left_half, right_half):
+    res = []
+    while len(left_half) != 0 and len(right_half) != 0:
+        if left_half[0] < right_half[0]:
+            res.append(left_half[0])
+            left_half.remove(left_half[0])
+        else:
+            res.append(right_half[0])
+            right_half.remove(right_half[0])
+    if len(left_half) == 0:
+        res = res + right_half
+    else:
+        res = res + left_half
+    return res
 
 
 def insertion_sort(input_list):

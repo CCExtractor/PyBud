@@ -38,7 +38,6 @@ def sample(a, b):
         print("iteration {iteration} is {name}".format(iteration=i, name=name))
 
 
-
 def nested_loop():
     """
         Test case 2
