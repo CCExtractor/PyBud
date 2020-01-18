@@ -110,7 +110,7 @@ class PyBud:
         # Create event data for this variable w/ line
         event = {"name": new_var, "type": var_type, "val": value, "line": self.line}
         # Initialize variable in variable log
-        if var_type in [int, float]:
+        if type(value) in [int, float]:
             self.vars_log[new_var] = {"init": event, "changes": [], "min": value, "max": value}
         else:
             self.vars_log[new_var] = {"init": event, "changes": []}

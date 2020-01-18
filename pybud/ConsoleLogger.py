@@ -10,7 +10,7 @@ class ConsoleLogger:
         self.file_path = file_path
 
     def print_log(self):
-        os.system('')
+        os.system('')  # allows for colors to be printed in console
 
         # parse json log file into dict
         log: dict = json_helper.json_file_to_dict(self.file_path)
