@@ -16,6 +16,8 @@ def sample(a, b):
 
     a_string = "this is a string"
 
+    num_list = []
+
     num_list = [500, 600, 700]
 
     num_list = [100, 200, 700, 800]
@@ -30,6 +32,10 @@ def sample(a, b):
     dict_test = {"one": {"yes": "yes"}, "two": 2}
 
     dict_test["one"]["yes"] = 0
+
+    friends = ['john', 'pat', 'gary', 'michael']
+    for i, name in enumerate(friends):
+        print("iteration {iteration} is {name}".format(iteration=i, name=name))
 
 
 def nested_loop():

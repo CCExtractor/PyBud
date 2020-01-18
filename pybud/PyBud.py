@@ -22,36 +22,32 @@ class PyBud:
         self.Differ = DiffFinder()
 
     def reset(self):
+        self.func_path = None
         self.steps = {}
         self.step = 1
         self.cached_vars = {}
-        self.step = 1
-        self.steps = {}
         self.vars_log = {}
         self.lines_log = {}
 
-    def run_debug(self, output_path, module, function, args):
+    def run_debug(self, output_path, function, args):
         """
         Runs the passed python function with PyBud debugging.
 
         Parameters:
             :param output_path: where to output json
-            :param module: module
             :param function: The function to debug.
-            :param args: The arguments you wish to pass to the function
+            :param args: The arguments you wish to pass to the function, in tuple format ie. '("one", 2, 4).
         """
         self.reset()
 
-        func = getattr(module, function)
-
-        self.func_name = func.__name__
+        self.func_name = function.__name__
 
         sys.settrace(self.trace_calls)
 
-        self.ex_time = self.lst_time = time.time() * 1000.0  # log start time
-        func(*args)  # call the method
+        self.ex_time = self.lst_time = time.time_ns()  # log start time
+        ret = function(*args)  # call the method
         sys.settrace(None)  # turn off debug tracing after function finish
-        self.ex_time = time.time() * 1000.0 - self.ex_time  # calculate time spent executing function
+        self.ex_time = time.time_ns() - self.ex_time  # calculate time spent executing function
 
         output = dict()  # create output
 
@@ -66,6 +62,8 @@ class PyBud:
         # save the dict to a file as json
         json_helper.dict_to_json_file(output, output_path)
 
+        return ret  # return the function's response
+
     def trace_calls(self, frame, event, arg):
         co = frame.f_code  # ref to code object
         self.line = frame.f_lineno  # initialize line number before we start debugging the lines
@@ -74,9 +72,11 @@ class PyBud:
             return self.trace_lines
 
     def trace_lines(self, frame, event, arg):
+        # immediately log the change in time since last step/line
+        diff = time.time_ns() - self.lst_time
+
         this_step = self.steps[self.step] = dict()
-        diff = (ts := time.time()) * 1000.0 - self.lst_time
-        this_step["ts"] = ts  # log timestamp for this step
+        this_step["ts"] = time.time()  # log timestamp for this step
         if self.line not in self.lines_log:
             self.lines_log[self.line] = {"cnt": 0, "total": 0.0}
         self.lines_log[self.line]["total"] += diff
@@ -89,19 +89,19 @@ class PyBud:
         this_step["events"] = {"var_inits": [], "var_changes": []}
 
         local_vars = frame.f_locals  # grab variables from frame
-        for v in local_vars:
+        for v, val in local_vars.items():
             if v not in self.cached_vars:  # variable is not yet tracked, initialize and log
-                this_step["events"]["var_inits"].append(self.var_initialize(v, local_vars[v]))
+                this_step["events"]["var_inits"].append(self.var_initialize(v, copy.deepcopy(val)))
             else:
                 # check if the variable has changed
-                is_changed, events = self.Differ.evaluate_diff(v, self.cached_vars[v], local_vars[v])
+                is_changed, events = self.Differ.evaluate_diff(v, self.cached_vars[v], copy.deepcopy(local_vars[v]))
                 if is_changed:
                     this_step["events"]["var_changes"].extend(events.copy())
-                    self.var_change(v, local_vars[v])  # add change to variable change log
-                    self.cached_vars[v] = copy.deepcopy(local_vars[v])  # update value of variable in local store
+                    self.var_change(v, copy.deepcopy(val))  # add change to variable change log
+                    self.cached_vars[v] = copy.deepcopy(val)  # update value of variable in local store
 
         self.line = frame.f_lineno  # update line number for next run
-        self.lst_time = time.time() * 1000.0  # update time for next run
+        self.lst_time = time.time_ns()  # update time for next run
         self.step += 1  # increment step
 
     def var_initialize(self, new_var, value) -> dict:

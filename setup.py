@@ -6,7 +6,7 @@ with open("README.md", "r", encoding='utf8') as fh:
 setuptools.setup(
     name='pybud',
     version='1.0.0',
-    packages=['pybud'],
+    packages=['pybud', 'pybud.tests'],
     entry_points={'console_scripts': ['pybud=pybud.main:main']},
     url='https://github.com/Tantan4321/PyBud',
     license='MIT',

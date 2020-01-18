@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from pybud.utils import best_duration
 
 
 def live_header(function, args, path):
@@ -10,7 +11,7 @@ def live_step(step, timestamp):
 
 
 def live_line(line, count, total):
-    return "Line {} executed {} times, total time spent on line: {}ms, average time: {}ms".format(line, count, total, total / count)
+    return "Line {} executed {} times, total time spent on line: {}, average time: {}".format(line, count, best_duration(total), best_duration(total / count))
 
 
 def live_var_init(variable, value):
@@ -65,7 +66,7 @@ def report_changes(changes: list, length):
             ret += "line {}: '{}', ".format(change["line"], change["val"])
         else:
             ret += "line {}: '{}'".format(change["line"], change["val"])
-    return "The variable changed on the following lines: " + ret
+    return "The variable changed on the following lines:\n" + ret
 
 
 def report_final_value(value):
@@ -73,9 +74,9 @@ def report_final_value(value):
 
 
 def report_exec_time(function, time):
-    return "Total time spent executing '{}' function: {}ms".format(function, time)
+    return "Total time spent executing '{}' function: {}".format(function, best_duration(time))
 
 
 def report_line_exec(line, count, total):
-    return "Line {} executed {} times, total time spent executing: {}ms".format(line, count, total)
+    return "Line {} executed {} times, total time spent executing: {}".format(line, count, best_duration(total))
 
