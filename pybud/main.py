@@ -27,8 +27,8 @@ def parse_args():
         "--function",
         default="main",
         nargs="+",
-        help="Optional: the function in the Python file you wish to debug, along with the arguments you wish to pass."
-             "Defaults to the main function if not provided. "
+        help="Optional: the function in the Python file you wish to debug, along with the arguments you wish to pass. "
+             "Defaults to the main function if argument not used. "
              "EXAMPLE: '--function test 2 4' will call 'test(2,4)'."
     )
 
@@ -37,7 +37,7 @@ def parse_args():
         "--output",
         default="output.pybud",
         metavar="FILE",
-        help="Optional: Path to write the json log file. Defaults to output.pybud"
+        help="Optional: Path to write the json log file. Defaults to output.pybud if argument not used."
     )
 
     parsing = parser.add_argument_group(title="Parsing",
@@ -45,9 +45,10 @@ def parse_args():
     parsing.add_argument(
         "-p",
         "--parse",
-        default="output.pybud",
+        nargs='?',
+        const="output.pybud",
         metavar="FILE",
-        help="Path to the json log you wish to parse into human-readable form. Defaults to output.pybud"
+        help="Path to the json log you wish to parse into human-readable form. Defaults to output.pybud if a file is not specified."
     )
 
     return parser.parse_args()
