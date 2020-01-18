@@ -1,8 +1,8 @@
 import os
 
-import json_helper
-from printout_builders import *
-from utils import *
+from pybud import json_helper
+from pybud.printout_builders import *
+from pybud.utils import *
 
 
 class ConsoleLogger:

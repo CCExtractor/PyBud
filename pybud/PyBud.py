@@ -3,10 +3,9 @@ import copy
 import sys
 import time
 
-from ConsoleLogger import ConsoleLogger
-import json_helper
-from DiffFinder import DiffFinder
-from utils import prRed
+from pybud.ConsoleLogger import ConsoleLogger
+from pybud import json_helper
+from pybud.DiffFinder import DiffFinder
 
 
 class PyBud:
