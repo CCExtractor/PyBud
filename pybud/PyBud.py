@@ -22,11 +22,10 @@ class PyBud:
         self.Differ = DiffFinder()
 
     def reset(self):
+        self.func_path = None
         self.steps = {}
         self.step = 1
         self.cached_vars = {}
-        self.step = 1
-        self.steps = {}
         self.vars_log = {}
         self.lines_log = {}
 
@@ -37,7 +36,7 @@ class PyBud:
         Parameters:
             :param output_path: where to output json
             :param function: The function to debug.
-            :param args: The arguments you wish to pass to the function
+            :param args: The arguments you wish to pass to the function, in tuple format ie. '("one", 2, 4).
         """
         self.reset()
 
@@ -45,10 +44,10 @@ class PyBud:
 
         sys.settrace(self.trace_calls)
 
-        self.ex_time = self.lst_time = time.time() * 1000.0  # log start time
+        self.ex_time = self.lst_time = time.time_ns()  # log start time
         ret = function(*args)  # call the method
         sys.settrace(None)  # turn off debug tracing after function finish
-        self.ex_time = time.time() * 1000.0 - self.ex_time  # calculate time spent executing function
+        self.ex_time = time.time_ns() - self.ex_time  # calculate time spent executing function
 
         output = dict()  # create output
 
@@ -63,7 +62,7 @@ class PyBud:
         # save the dict to a file as json
         json_helper.dict_to_json_file(output, output_path)
 
-        return ret  # Return the function's response
+        return ret  # return the function's response
 
     def trace_calls(self, frame, event, arg):
         co = frame.f_code  # ref to code object
@@ -73,9 +72,11 @@ class PyBud:
             return self.trace_lines
 
     def trace_lines(self, frame, event, arg):
+        # immediately log the change in time since last step/line
+        diff = time.time_ns() - self.lst_time
+
         this_step = self.steps[self.step] = dict()
-        diff = (ts := time.time()) * 1000.0 - self.lst_time
-        this_step["ts"] = ts  # log timestamp for this step
+        this_step["ts"] = time.time()  # log timestamp for this step
         if self.line not in self.lines_log:
             self.lines_log[self.line] = {"cnt": 0, "total": 0.0}
         self.lines_log[self.line]["total"] += diff
@@ -100,7 +101,7 @@ class PyBud:
                     self.cached_vars[v] = copy.deepcopy(val)  # update value of variable in local store
 
         self.line = frame.f_lineno  # update line number for next run
-        self.lst_time = time.time() * 1000.0  # update time for next run
+        self.lst_time = time.time_ns()  # update time for next run
         self.step += 1  # increment step
 
     def var_initialize(self, new_var, value) -> dict:
