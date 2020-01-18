@@ -3,7 +3,6 @@ import copy
 import sys
 import time
 
-from pybud.ConsoleLogger import ConsoleLogger
 from pybud import json_helper
 from pybud.DiffFinder import DiffFinder
 
@@ -21,7 +20,6 @@ class PyBud:
         self.ex_time = None
         self.lst_time = None
         self.Differ = DiffFinder()
-        self.Logger = ConsoleLogger("output.json")  # TODO: move up
 
     def reset(self):
         self.steps = {}
@@ -32,32 +30,30 @@ class PyBud:
         self.vars_log = {}
         self.lines_log = {}
 
-    def run_replay(self, file_path):  # TODO: move up
-        """
-            Runs the passed python function with PyBud debugging.
-
-            Parameters:
-                file_path: The debugger log
-        """
-
-    def run_debug(self, function, *args):
+    def run_debug(self, output_path, module, function, args):
         """
         Runs the passed python function with PyBud debugging.
 
         Parameters:
-            function: The function you wish to debug.
-            args: The arguments you wish to pass to the function
+            :param output_path: where to output json
+            :param module: module
+            :param function: The function to debug.
+            :param args: The arguments you wish to pass to the function
         """
         self.reset()
-        self.func_name = function.__name__
+
+        func = getattr(module, function)
+
+        self.func_name = func.__name__
 
         sys.settrace(self.trace_calls)
 
         self.ex_time = self.lst_time = time.time() * 1000.0  # log start time
-        function(*args)  # call the method
+        func(*args)  # call the method
+        sys.settrace(None)  # turn off debug tracing after function finish
         self.ex_time = time.time() * 1000.0 - self.ex_time  # calculate time spent executing function
 
-        output = dict()
+        output = dict()  # create output
 
         output["func_name"] = self.func_name
         output["func_path"] = self.func_path
@@ -67,11 +63,8 @@ class PyBud:
         output["vars_log"] = self.vars_log
         output["lines_log"] = self.lines_log
 
-        # save the json dict to a file
-        json_helper.dict_to_json_file(output, "output.json")  # TODO: specifiable output path
-
-        self.Logger.print_log()
-        # self.print_log()  # printout end log
+        # save the dict to a file as json
+        json_helper.dict_to_json_file(output, output_path)
 
     def trace_calls(self, frame, event, arg):
         co = frame.f_code  # ref to code object
@@ -101,7 +94,7 @@ class PyBud:
                 this_step["events"]["var_inits"].append(self.var_initialize(v, local_vars[v]))
             else:
                 # check if the variable has changed
-                is_changed, events = self.Differ.evaluate_diff(v, self.cached_vars[v], local_vars[v]);
+                is_changed, events = self.Differ.evaluate_diff(v, self.cached_vars[v], local_vars[v])
                 if is_changed:
                     this_step["events"]["var_changes"].extend(events.copy())
                     self.var_change(v, local_vars[v])  # add change to variable change log
