@@ -47,10 +47,12 @@ class DiffFinder:
         old, new = chg
         temp_event = {"type": "change", "var_name": self.var_name, "var_path": ""}
         # changed path is formatted as list, variable has sub-elements
+
         if isinstance(change_path, list):
             temp_event["var_path"] = change_path.copy()  # log path to change
-        elif len(change_path) != 0:
-            temp_event["var_path"] = change_path
+        elif len(change_path) != 0 and isinstance(change_path, str):  # else check if the path exists and is a string
+            temp = change_path.split(".")  # deep copy causes this to sometimes be in form: "item1.item2", delimit
+            temp_event["var_path"] = temp  # log path to change
         # log values to event
         temp_event["old_val"] = old
         temp_event["new_val"] = new
