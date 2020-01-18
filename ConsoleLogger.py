@@ -1,3 +1,5 @@
+import os
+
 import json_helper
 from printout_builders import *
 from utils import *
@@ -8,6 +10,8 @@ class ConsoleLogger:
         self.file_path = file_path
 
     def print_log(self):
+        os.system('')
+
         # parse json log file into dict
         log: dict = json_helper.json_file_to_dict(self.file_path)
 
