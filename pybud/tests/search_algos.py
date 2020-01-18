@@ -12,7 +12,7 @@ def binary_search(sequence, value):
     return None
 
 
-def dfs(graph, node, visited):
+def dfs(graph, node, visited=[]):
     if node not in visited:
         visited.append(node)
         for n in graph[node]:

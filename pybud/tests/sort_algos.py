@@ -6,6 +6,7 @@ def bubble_sort(input_list):
                 temp = input_list[idx]
                 input_list[idx] = input_list[idx + 1]
                 input_list[idx + 1] = temp
+    return input_list
 
 
 def merge_sort(input_list):
@@ -47,6 +48,7 @@ def insertion_sort(input_list):
             input_list[j + 1] = input_list[j]
             j = j - 1
         input_list[j + 1] = nxt_element
+    return input_list
 
 
 def shell_sort(input_list):
@@ -63,6 +65,7 @@ def shell_sort(input_list):
             input_list[j] = temp
         # Reduce the gap for the next element
         gap = gap // 2
+    return input_list
 
 
 def selection_sort(input_list):
@@ -73,3 +76,4 @@ def selection_sort(input_list):
                 min_idx = j
         # Swap the minimum value with the compared value
         input_list[idx], input_list[min_idx] = input_list[min_idx], input_list[idx]
+    return input_list
