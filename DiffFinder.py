@@ -20,7 +20,7 @@ class DiffFinder:
                 self.var_change(change_path, difference)
             elif diff_type == dictdiffer.REMOVE:
                 self.var_remove(change_path, difference)
-        print(self.changes)  # DEBUG
+        # print(self.changes)  # DEBUG
         return True, self.changes
 
     def var_add(self, change_path, chg):
@@ -32,7 +32,7 @@ class DiffFinder:
                 # log values to event
                 temp_event["element"] = key
                 temp_event["new_val"] = val
-                print("var add if")  # DEBUG
+                # print("var add if")  # DEBUG
                 self.changes.append(temp_event)  # log event to changes
         # else the change is a list of variable name and value pairs
         else:
@@ -40,14 +40,14 @@ class DiffFinder:
                 # log values to event
                 temp_event["element"] = path
                 temp_event["new_val"] = val
-                print("var add else")  # DEBUG
+                # print("var add else")  # DEBUG
                 self.changes.append(temp_event)  # log event to changes
 
     def var_change(self, change_path, chg):
         old, new = chg
         temp_event = {"type": "change", "var_name": self.var_name, "var_path": ""}
-        # changed path is formatted as list, variable has sub-elements
 
+        # changed path is formatted as list, variable has sub-elements
         if isinstance(change_path, list):
             temp_event["var_path"] = change_path.copy()  # log path to change
         elif len(change_path) != 0 and isinstance(change_path, str):  # else check if the path exists and is a string
@@ -56,7 +56,7 @@ class DiffFinder:
         # log values to event
         temp_event["old_val"] = old
         temp_event["new_val"] = new
-        print("var change")  # DEBUG
+        # print("var change")  # DEBUG
         self.changes.append(temp_event)  # log event to changes
 
     def var_remove(self, change_path, chg, ):
@@ -68,7 +68,7 @@ class DiffFinder:
                 # log values to event
                 temp_event["element"] = key
                 temp_event["old_val"] = val
-                print("var remove if")  # DEBUG
+                # print("var remove if")  # DEBUG
                 self.changes.append(temp_event)  # log event to changes
         # else the change is a list of variable name and value pairs
         else:
@@ -76,5 +76,5 @@ class DiffFinder:
                 # log values to event
                 temp_event["element"] = path
                 temp_event["old_val"] = val
-                print("var remove else")  # DEBUG
+                # print("var remove else")  # DEBUG
                 self.changes.append(temp_event)  # log event to changes
