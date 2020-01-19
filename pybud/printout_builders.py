@@ -6,8 +6,8 @@ def live_header(function, args, path):
     return "# Debugging the '{}' function with arguments '{}' in the file '{}' ... #".format(function, args, path)
 
 
-def live_step(step, timestamp):
-    return "Step: {}, timestamp: {}".format(step, timestamp)
+def live_step(step):
+    return "Step {}:".format(step)
 
 
 def live_line(line, count, total):

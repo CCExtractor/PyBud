@@ -6,6 +6,7 @@ from pathlib import Path
 from pybud.ConsoleLogger import ConsoleLogger
 from pybud.PyBud import PyBud
 from pybud.VideoLogger import VideoLogger
+from pybud.example import sample
 from pybud.tests.perform_tests import run_tests
 
 
@@ -114,6 +115,14 @@ def main():
         else:  # if not, print the log in human readable form to console
             logger = ConsoleLogger(file_path)
             logger.print_log()
+    else:  # no args, just run test on example
+        output_path = "example.pybud"
+
+        debugger = PyBud()
+        debugger.run_debug(output_path, sample, (3, 2))
+
+        logger = ConsoleLogger(output_path)
+        logger.print_log()
 
 
 if __name__ == '__main__':

@@ -26,7 +26,7 @@ class ConsoleLogger:
         steps: dict = log["steps"]
         for step, step_contents in steps.items():
             # log this step
-            prLightPurple("\n" + live_step(step, step_contents["ts"]))
+            prLightPurple("\n" + live_step(step), "")
 
             # log this line
             line: dict = step_contents["line"]
