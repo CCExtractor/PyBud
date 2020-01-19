@@ -5,6 +5,7 @@ from pathlib import Path
 
 from pybud.ConsoleLogger import ConsoleLogger
 from pybud.PyBud import PyBud
+from pybud.VideoLogger import VideoLogger
 from pybud.tests.perform_tests import run_tests
 
 
@@ -28,9 +29,17 @@ def parse_args():
         "--function",
         default="main",
         nargs="+",
-        help="Optional: the function in the Python file you wish to debug, along with the arguments you wish to pass. "
+        help="The function in the Python file you wish to debug, along with the arguments you wish to pass. "
              "Defaults to the main function if argument not used. "
              "EXAMPLE: '--function test 2 4' will call 'test(2,4)'."
+    )
+
+    debugging.add_argument(
+        "-v",
+        "--video",
+        action="store_true",
+        help="Generate a video rendering for the PyBud debug steps of the program flow. "
+             " "
     )
 
     debugging.add_argument(
@@ -90,12 +99,21 @@ def main():
         debugger = PyBud()
         debugger.run_debug(output_path, func, this_args)
 
-        logger = ConsoleLogger(output_path)
-        logger.print_log()
+        if args.video:  # user wants a video render
+            vlogger = VideoLogger(output_path)
+
+        else:  # if not, print the log in human readable form to console
+            logger = ConsoleLogger(output_path)
+            logger.print_log()
     elif args.parse:
         file_path = args.parse
-        logger = ConsoleLogger(file_path)
-        logger.print_log()
+
+        if args.video:  # user wants a video render
+            vlogger = VideoLogger(file_path)
+
+        else:  # if not, print the log in human readable form to console
+            logger = ConsoleLogger(file_path)
+            logger.print_log()
 
 
 if __name__ == '__main__':
