@@ -10,7 +10,7 @@ from pybud.tests.perform_tests import run_tests
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="A Python debugger for analyzing and reporting functions. Created by Eastan Giebler."
+        description="A Python debugger for analyzing and profiling functions. Created by Eastan Giebler."
     )
 
     debugging = parser.add_argument_group(title="Debugging",
