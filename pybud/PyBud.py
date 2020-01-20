@@ -108,7 +108,7 @@ class PyBud:
         self.cached_vars[new_var] = copy.deepcopy(value)
         var_type = type(value).__name__  # get name of variable type without <class> tag
         # Create event data for this variable w/ line
-        event = {"name": new_var, "type": var_type, "val": value, "line": self.line}
+        event = {"name": new_var, "type": var_type, "val": value, "line": self.line, "step": self.step}
         # Initialize variable in variable log
         if type(value) in [int, float]:
             self.vars_log[new_var] = {"init": event, "changes": [], "min": value, "max": value}

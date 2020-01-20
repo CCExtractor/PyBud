@@ -51,8 +51,8 @@ def live_var_item_remove(variable, var_path, val):
     return ":> In variable '{}', the item '{}' was removed. It's value was: '{}'".format(variable, element, str(val))
 
 
-def report_var_init(variable, var_type, value, line):
-    return "Variable '{}' of type '{}' was initialized with value '{}' on line '{}'".format(variable, var_type, value, line)
+def report_var_init(variable, var_type, step, value, line):
+    return "Variable '{}' of type '{}' was initialized at step '{}' with value '{}' on line '{}'".format(variable, var_type, step, value, line)
 
 
 def report_var_range(min_value, max_value):

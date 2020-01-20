@@ -78,7 +78,7 @@ class ConsoleLogger:
         for var, var_contents in vars_log.items():
             # log the init props for this variable
             var_init: dict = var_contents["init"]
-            prCyan("\n" + report_var_init(var_init["name"], var_init["type"], var_init["val"], var_init["line"]))
+            prCyan("\n" + report_var_init(var_init["name"], var_init["type"], var_init["step"], var_init["val"], var_init["line"]))
 
             # check if this variable has minimum, maximum logging
             if "min" in var_contents:
