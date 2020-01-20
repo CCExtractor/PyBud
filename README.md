@@ -21,13 +21,15 @@ Once installed, running `pybud --help` will give you an overview of how to use P
 Here's the help output:
 
 ```bash
-$ pybud --help
-usage: pybud [-h] [-d FILE] [-f FUNCTION [FUNCTION ...]] [-v] [-o FILE] [-p [FILE]] [-t]
+$ pybud -h
+usage: pybud [-h] [-t] [-d FILE] [-f FUNCTION [FUNCTION ...]] [-o FILE] [-v [FILE]] [-p [FILE]]
 
 A Python debugger for analyzing and profiling functions. Created by Eastan Giebler.
 
 optional arguments:
   -h, --help            show this help message and exit
+  -t, --test            Test PyBud on a suite of sorting, searching, and similar algorithms. Outputs a PyBud JSON for
+                        each function in the 'test/test_logs' package.
 
 Debugging:
   Debug a python function and generate an output log.
@@ -38,18 +40,21 @@ Debugging:
                         The function in the Python file you wish to debug, along with the arguments you wish to pass.
                         Defaults to the main function if argument not used. EXAMPLE: '--function test 2 4' will call
                         'test(2,4)'.
-  -v, --video           Generate a video rendering for the PyBud debug steps of the program flow.
   -o FILE, --output FILE
-                        Optional: Path to write the json log file. Defaults to output.pybud if argument not used.
+                        Optional: Path to write the json log file to. Defaults to output.pybud if argument not used.
+  -v [FILE], --video [FILE]
+                        Generate a video rendering for the PyBud debug steps of the program flow. Optional: provide a
+                        filepath to output to, defaults to output.mp4.
 
 Parsing and Analysis:
-  Parse a PyBud JSON output and display to console in human-readable form.
+  Parse a PyBud JSON output and display in human-readable form.
 
   -p [FILE], --parse [FILE]
                         Path to the json log you wish to parse into human-readable form. Defaults to output.pybud if a
                         file is not specified.
-  -t, --test            Test PyBud on a suite of sorting, searching, and similar algorithms. Outputs a PyBud JSON for
-                        each function in the 'test/test_logs' package.
+  -v [FILE], --video [FILE]
+                        Generate a video rendering for the PyBud debug steps of the program flow. Optional: provide a
+                        filepath to output to, defaults to output.mp4.
 ```
 
 ## Contributing
