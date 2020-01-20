@@ -28,7 +28,7 @@ VAR_XSTART = LE_XSTART
 VAR_YSTART = LE_YEND
 
 # text properties
-LINE_PADDING = 10.0
+CONTAINER_PADDING = 10.0
 LINE_SPACING = 0.1
 FONT_SIZE = 20
 FONT_DIR = Path(__file__).parent / "fonts"
