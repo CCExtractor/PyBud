@@ -94,10 +94,12 @@ def vid_history_up_to_step(changes: list, step):
         elif change["step"] > step:
             break
         else:
-            if i != len(changes) - 1:
-                ret += "line {}: '{}', ".format(change["line"], change["val"])
-            else:
+            if i == 0:
                 ret += "line {}: '{}'".format(change["line"], change["val"])
+            elif i == len(changes):
+                ret += ", line {}: '{}'.".format(change["line"], change["val"])
+            else:
+                ret += ", line {}: '{}'".format(change["line"], change["val"])
     return "History:\n" + ret, this_change
 
 

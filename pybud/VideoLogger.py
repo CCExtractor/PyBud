@@ -87,7 +87,7 @@ class VideoLogger:
             if var_init["step"] == self.step:
                 self.vars_cache[var_init["name"]] = str(var_init["val"])
                 # wrap init text
-                for line in wrap_text(vid_var_init(var_init["name"], var_init["type"], var_init["step"],
+                for line in wrap_text(vid_var_init(var_init["name"], var_init["type"],
                                                    var_init["val"], var_init["line"]), self.var_char_width):
                     var_lines.append({"contents": line, "color": Colors.green})
                 var_lines.append({"contents": " ", "color": Colors.text_default})  # add space after variable
