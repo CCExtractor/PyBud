@@ -38,9 +38,11 @@ def parse_args():
     debugging.add_argument(
         "-v",
         "--video",
-        action="store_true",
+        nargs='?',
+        const="output.mp4",
+        metavar="FILE",
         help="Generate a video rendering for the PyBud debug steps of the program flow. "
-             " "
+             "Optionally provide a filepath to output to, defaults to output.mp4. "
     )
 
     debugging.add_argument(
@@ -108,6 +110,7 @@ def main():
             logger.print_log()
     elif args.parse:
         file_path = args.parse
+        output_path = args.output  # TODO: let user specify output path
 
         if args.video:  # user wants a video render
             vlogger = VideoLogger(file_path)
@@ -123,6 +126,9 @@ def main():
 
         logger = ConsoleLogger(output_path)
         logger.print_log()
+
+        vlogger = VideoLogger(output_path)
+        vlogger.generate("test.mp4")
 
 
 if __name__ == '__main__':

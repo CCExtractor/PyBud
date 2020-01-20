@@ -118,7 +118,7 @@ class PyBud:
 
     def var_change(self, var, new_val):
         var_key = self.vars_log[var]
-        var_key["changes"].append({"line": self.line, "val": new_val})
+        var_key["changes"].append({"step": self.step, "line": self.line, "val": new_val})
         if "min" in var_key:  # this is a variable with min and max tracking
             var_key["min"] = min(new_val, var_key["min"])
             var_key["max"] = max(new_val, var_key["max"])
