@@ -6,8 +6,9 @@ from PIL import ImageFont
 # Color scheme
 class Colors:
     background = (41, 45, 52, 255)
-    primary = (144, 176, 97, 255)
-    secondary = (190, 138, 89, 255)
+    green = (144, 176, 97, 255)
+    orange = (190, 138, 89, 255)
+    red = (193, 98, 102, 255)
     highlight = (157, 163, 157, 255)
     text_default = (240, 244, 250, 255)
     divider = text_default
@@ -19,12 +20,12 @@ FRAME_WIDTH = 1920
 FRAME_HEIGHT = 1080
 
 # line exec section of canvas
-LE_XSTART = 7 / 10 * FRAME_WIDTH
-LE_YSTART = 0.07 * FRAME_HEIGHT
+LE_XSTART = 6 / 10 * FRAME_WIDTH
+LE_YEND = 0.07 * FRAME_HEIGHT
 
 # variable section of canvas
-VAR_XSTART = 7 / 10 * FRAME_WIDTH
-VAR_YSTART = LE_YSTART
+VAR_XSTART = LE_XSTART
+VAR_YSTART = LE_YEND
 
 # text properties
 LINE_PADDING = 10
