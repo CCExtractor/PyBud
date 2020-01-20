@@ -12,7 +12,7 @@ pip install pybud
 
 ## Demo
 
-![Demo](recordings\demo.gif)
+![Demo](recordings/demo.gif)
 
 ## Usage
 
