@@ -6,10 +6,10 @@ from PIL import ImageFont
 # Color scheme
 class Colors:
     background = (41, 45, 52, 255)
-    green = (144, 176, 97, 255)
+    green = (76, 175, 80, 255)
     orange = (190, 138, 89, 255)
     red = (193, 98, 102, 255)
-    highlight = (157, 163, 157, 255)
+    highlight = (95, 115, 130, 255)
     text_default = (240, 244, 250, 255)
     divider = text_default
 
@@ -28,7 +28,8 @@ VAR_XSTART = LE_XSTART
 VAR_YSTART = LE_YEND
 
 # text properties
-LINE_PADDING = 10
+LINE_PADDING = 10.0
+LINE_SPACING = 0.1
 FONT_SIZE = 20
 FONT_DIR = Path(__file__).parent / "fonts"
 FONT = ImageFont.truetype(str(FONT_DIR / "consolas.ttf"), FONT_SIZE)
