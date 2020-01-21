@@ -1,6 +1,7 @@
 ### PyBud specific
 *.pybud
 *.mp4
+!recordings/*.mp4
 
 # terminalizer recording ymls
 recordings/*.yml 

@@ -1,6 +1,10 @@
 # PyBud
 
-PyBud is a Python tool for debugging and profiling python functions.
+PyBud is a Python debugging and profiling tool that generates videos of step-by-step code execution.
+
+Here's a PyBud example output from debugging a bubble sort algorithm!
+
+![Demo](recordings/bubble_sort.mp4)
 
 ## Installation
 
@@ -10,9 +14,9 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install PyBud.
 pip install pybud
 ```
 
-## Demo
+## Usage Example
 
-![Demo](recordings\demo.gif)
+![Usage](recordings/demo.gif)
 
 ## Usage
 
@@ -29,7 +33,7 @@ A Python debugger for analyzing and profiling functions. Created by Eastan Giebl
 optional arguments:
   -h, --help            show this help message and exit
   -t, --test            Test PyBud on a suite of sorting, searching, and similar algorithms. Outputs a PyBud JSON for
-                        each function in the 'test/test_logs' package.
+                        each function in the 'pybud/test/test_logs' package.
 
 Debugging:
   Debug a python function and generate an output log.

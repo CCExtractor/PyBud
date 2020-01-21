@@ -37,7 +37,7 @@ class VideoLogger:
         self.frame = None
         self.frame_drawer: ImageDraw = None
 
-        # UI props
+        # UI properties
         self.font_width = None
         self.font_height = None
 
