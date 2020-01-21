@@ -8,6 +8,7 @@ from PIL import Image, ImageDraw
 
 from pybud import json_helper
 from pybud.printout_builders import *
+from pybud.utils import prYellow
 from pybud.video_constants import *
 
 
@@ -136,7 +137,8 @@ class VideoLogger:
 
         # draw the lines
         for adj_line, line in enumerate(self.src):
-            self.frame_drawer.text((CONTAINER_PADDING, CONTAINER_PADDING + adj_line * self.font_height), self.src[adj_line],
+            self.frame_drawer.text((CONTAINER_PADDING, CONTAINER_PADDING + adj_line * self.font_height),
+                                   self.src[adj_line],
                                    font=FONT, fill=Colors.text_default)
 
     def gen_line_info(self):
@@ -144,9 +146,11 @@ class VideoLogger:
         text = live_step(self.step) + " " + live_line(line["num"], line["cnt"], line["total"])
 
         text = "\n".join(textwrap.wrap(text, width=self.var_sec_width_char))
-        self.frame_drawer.text((CONTAINER_PADDING + LE_XSTART, CONTAINER_PADDING), text, font=FONT, fill=Colors.text_default)
+        self.frame_drawer.text((CONTAINER_PADDING + LE_XSTART, CONTAINER_PADDING), text, font=FONT,
+                               fill=Colors.orange)
 
     def generate(self, vid_path):
+        prYellow("# Generating video rendering of PyBud program flow... #")
         self.init_frame_props()  # init frame properties, ie padding, text size, etc.
         self.vars_log = self.log_file["vars_log"]  # grab the variable log
 
@@ -158,6 +162,7 @@ class VideoLogger:
             self.gen_frame()
             writer.write(cv2.cvtColor(np.asarray(self.frame), cv2.COLOR_RGB2BGR))
         writer.release()
+        prYellow("# Video rendering complete! #")
 
 
 def wrap_text(text, cols):

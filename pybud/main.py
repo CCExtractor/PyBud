@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import importlib
+import os
 from pathlib import Path
 
 from pybud.ConsoleLogger import ConsoleLogger
@@ -20,7 +21,7 @@ def parse_args():
         "--test",
         action="store_true",
         help="Test PyBud on a suite of sorting, searching, and similar algorithms. "
-             "Outputs a PyBud JSON for each function in the 'test/test_logs' package. "
+             "Outputs a PyBud JSON for each function in the 'pybud/test/test_logs' package. "
     )
 
     debugging = parser.add_argument_group(title="Debugging",
@@ -90,6 +91,8 @@ def function_arg(arg):
 
 def main():
     args = parse_args()
+
+    os.system('')  # allows for colors to be printed in console
     if args.test:
         run_tests()
     elif args.debug:
@@ -107,22 +110,24 @@ def main():
 
         if args.video:  # user wants a video render
             vlogger = VideoLogger(output_path)
-
+            vlogger.generate(args.video)
         else:  # if not, print the log in human readable form to console
             logger = ConsoleLogger(output_path)
             logger.print_log()
     elif args.parse:
         file_path = args.parse
-        output_path = args.output  # TODO: let user specify output path
 
         if args.video:  # user wants a video render
             vlogger = VideoLogger(file_path)
-
+            vlogger.generate(args.video)
         else:  # if not, print the log in human readable form to console
             logger = ConsoleLogger(file_path)
             logger.print_log()
     else:  # no args, just run test on example
-        output_path = "example.pybud"
+        test_dir = Path(__file__).parent / "debug"
+        Path(str(test_dir)).mkdir(parents=True, exist_ok=True)
+
+        output_path = str(test_dir / "example.pybud")
 
         debugger = PyBud()
         debugger.run_debug(output_path, sample, (3, 2))
@@ -131,7 +136,7 @@ def main():
         logger.print_log()
 
         vlogger = VideoLogger(output_path)
-        vlogger.generate("test.mp4")
+        vlogger.generate(str(test_dir / "test.mp4"))
 
 
 if __name__ == '__main__':
