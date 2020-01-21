@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw
 from pybud import json_helper
 from pybud.printout_builders import *
 from pybud.utils import prYellow
+from pybud.video.encoders import *
 from pybud.video.video_config_handler import *
 
 
@@ -196,13 +197,16 @@ class VideoLogger:
     def generate(self, vid_path):
         prYellow("# Generating video rendering of PyBud program flow... #")
         # init video writer
-        writer = cv2.VideoWriter(vid_path, cv2.VideoWriter_fourcc(*'mp4v'), self.config.fps,
-                                 (self.config.FRAME_WIDTH, self.config.FRAME_HEIGHT))
+        if ".mp4" in vid_path:
+            writer: OutputEncoder = MP4Encoder(vid_path, self.config.fps, self.config.frame_width, self.config.frame_height)
+        else:
+            writer: OutputEncoder = GIFEncoder(vid_path, self.config.fps)
+
         # draw intro frames if needed
         if self.config.intro_text:
             self.draw_intro_frame()
             for _ in range(round(self.config.intro_time * self.config.fps)):
-                writer.write(cv2.cvtColor(np.asarray(self.frame), cv2.COLOR_RGB2BGR))
+                writer.write_frame(self.frame)
 
         self.init_frame_props()  # init frame properties, ie padding, text size, etc.
         self.vars_log = self.log_file["vars_log"]  # grab the variable log
@@ -211,8 +215,8 @@ class VideoLogger:
             self.step = int(step)
             self.step_contents = contents
             self.gen_frame()
-            writer.write(cv2.cvtColor(np.asarray(self.frame), cv2.COLOR_RGB2BGR))
-        writer.release()
+            writer.write_frame(self.frame)
+        writer.save()  # save the output
         prYellow("# Video rendering complete! #")
 
 

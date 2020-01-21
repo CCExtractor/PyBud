@@ -56,10 +56,10 @@ def parse_args():
         "-v",
         "--video",
         nargs='?',
-        const="output.mp4",
+        const="output.gif",
         metavar="FILE",
         help="Generate a video rendering for the PyBud debug steps of the program flow. "
-             "Optional: provide a filepath to output to, mp4 is the only supported format, defaults to output.mp4. "
+             "Optional: provide a filepath to output to, mp4 is the only supported format, defaults to output.gif. "
     )
 
     videocfg = debugging.add_argumentvideo = debugging.add_argument(
@@ -151,7 +151,7 @@ def main():
         logger.print_log()
 
         vlogger = VideoLogger(output_path)
-        vlogger.generate(str(test_dir / "test.mp4"))
+        vlogger.generate(str(test_dir / "test.gif"))
 
 
 if __name__ == '__main__':
