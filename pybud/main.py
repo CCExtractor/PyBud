@@ -135,7 +135,6 @@ def main():
             else:
                 vlogger = VideoLogger(file_path)
             vlogger.generate(args.video)
-            vlogger.generate(args.video)
         else:  # if not, print the log in human readable form to console
             logger = ConsoleLogger(file_path)
             logger.print_log()

@@ -38,10 +38,12 @@ def sample(a, b):
         print("iteration {iteration} is {name}".format(iteration=i, name=name))
 
 
-def nested_loop():
+def nested_loop(a):
     """
         Test case 2
     """
+    test_a = a
+
     num_list = [500, 600, 700]
     alpha_list = ['x', 'y', 'z']
 

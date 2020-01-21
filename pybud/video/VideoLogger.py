@@ -171,7 +171,7 @@ class VideoLogger:
     def gen_watermark(self):
         x = self.config.FRAME_WIDTH - self.config.CONTAINER_PADDING
         y = self.config.FRAME_HEIGHT - self.config.CONTAINER_PADDING
-        w_font = ImageFont.truetype(str(self.config.FONT_DIR / "UbuntuMono-B.ttf"), 36)
+        w_font = ImageFont.truetype(str(self.config.FONT_DIR / "UbuntuMono-B.ttf"), 40)
         # create transparent overlay
         overlay = Image.new("RGBA", (self.config.FRAME_WIDTH, self.config.FRAME_HEIGHT), (255, 255, 255, 0))
         o_draw = ImageDraw.Draw(overlay)

@@ -4,7 +4,7 @@ fps: 2  # number of step frames per second
 
 font:
   font-family: Consolas.ttf  # supported fonts are in the fonts directory
-  font-size: 20
+  font-size: 22
 
 intro:
   text: "Demo"  # leave empty if you don't want to display an intro screen
