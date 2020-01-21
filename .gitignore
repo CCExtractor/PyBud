@@ -1,6 +1,7 @@
 ### PyBud specific
 *.pybud
 *.mp4
+*.gif
 
 # terminalizer recordings
 recordings/
