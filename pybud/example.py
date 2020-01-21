@@ -6,6 +6,7 @@ def sample(a, b):
     Test case 1
     """
     for _ in range(2):
+        print("yes")
         x = 8
         y = 14
 
@@ -16,7 +17,7 @@ def sample(a, b):
         fl = 1.234
 
         a_string = "this is a string"
-
+        print(a_string)
         num_list = []
 
         num_list = [500, 600, 700]
@@ -29,7 +30,7 @@ def sample(a, b):
 
         dict_test["one"] = 2
         dict_test = {"one": 1, "two": 2}
-
+        print("Test 2, test 3, Test the test?")
         dict_test = {"one": {"yes": "yes"}, "two": 2}  # text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test
 
         dict_test["one"]["yes"] = 0

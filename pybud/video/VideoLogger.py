@@ -1,10 +1,6 @@
-import importlib
-import inspect
 import textwrap
 
-import cv2
-import numpy as np
-from PIL import Image, ImageDraw
+from PIL import ImageDraw
 
 from pybud import json_helper
 from pybud.printout_builders import *
@@ -23,13 +19,15 @@ class VideoLogger:
         self.src_start_index = None
         self.src_end_index = None
 
-        # variable section helpers
+        # local caches
+        self.print_cache = []
         self.vars_cache = {}
 
         # log data
         self.step = 0
         self.step_contents = {}
         self.vars_log = {}
+        self.output_log = []
 
         # image generation tools
         self.frame = None
@@ -45,6 +43,9 @@ class VideoLogger:
         self.src_sec_width_char = None
         self.src_sec_height_char = None
 
+        self.out_sec_width_char = None
+        self.out_sec_height_char = None
+
     def init_frame_props(self):
         # print("init frame props")  # DEBUG
         self.frame = Image.new("RGBA", (self.config.frame_width, self.config.frame_height),
@@ -56,11 +57,20 @@ class VideoLogger:
 
         self.font_height = self.font_height * (1.0 + 2 * self.config.LINE_SPACING)
 
-        self.var_sec_width_char = int((self.config.VAR_XEND - self.config.VAR_XSTART - 2 * self.config.CONTAINER_PADDING) / self.font_width)
-        self.var_sec_height_char = int((self.config.VAR_YEND - self.config.VAR_YSTART - 2 * self.config.CONTAINER_PADDING) / self.font_height)
+        self.var_sec_width_char = int(
+            (self.config.VAR_XEND - self.config.VAR_XSTART - 2 * self.config.CONTAINER_PADDING) / self.font_width)
+        self.var_sec_height_char = int(
+            (self.config.VAR_YEND - self.config.VAR_YSTART - 2 * self.config.CONTAINER_PADDING) / self.font_height)
 
-        self.src_sec_width_char = int((self.config.SRC_XEND - self.config.SRC_XSTART - 2 * self.config.CONTAINER_PADDING) / self.font_width)
-        self.src_sec_height_char = int((self.config.SRC_YEND - self.config.SRC_YSTART - 2 * self.config.CONTAINER_PADDING) / self.font_height)
+        self.src_sec_width_char = int(
+            (self.config.SRC_XEND - self.config.SRC_XSTART - 2 * self.config.CONTAINER_PADDING) / self.font_width)
+        self.src_sec_height_char = int(
+            (self.config.SRC_YEND - self.config.SRC_YSTART - 2 * self.config.CONTAINER_PADDING) / self.font_height)
+
+        self.out_sec_width_char = int(
+            (self.config.OP_XEND - self.config.OP_XSTART - 2 * self.config.CONTAINER_PADDING) / self.font_width)
+        self.out_sec_height_char = int(
+            (self.config.OP_YEND - self.config.OP_YSTART - 2 * self.config.CONTAINER_PADDING) / self.font_height)
 
     def gen_frame(self):
         # print("drawing frame")  # DEBUG
@@ -69,8 +79,9 @@ class VideoLogger:
         self.frame_drawer = ImageDraw.Draw(self.frame)  # connect the image drawer to this frame
 
         # draw dividers
-        self.frame_drawer.line((self.config.VAR_XSTART, self.config.VAR_YSTART, self.config.VAR_XSTART, self.config.VAR_YEND),
-                               fill=self.config.Colors.divider, width=self.config.divider_width)
+        self.frame_drawer.line(
+            (self.config.VAR_XSTART, self.config.VAR_YSTART, self.config.VAR_XSTART, self.config.VAR_YEND),
+            fill=self.config.Colors.divider, width=self.config.divider_width)
         self.frame_drawer.line(
             (self.config.LE_XSTART, self.config.LE_YEND, self.config.LE_XEND, self.config.LE_YEND),
             fill=self.config.Colors.divider, width=self.config.divider_width)
@@ -87,12 +98,44 @@ class VideoLogger:
         # draw the variables section
         self.gen_vars()
 
+        # draw the printf output section
+        self.gen_output()
+
         # generate watermark if needed
         if self.config.watermark:
             self.gen_watermark()
 
         # resize to output resolution
         self.resize_frame()
+
+    def gen_output(self):
+        # print("build output section")  # DEBUG
+        for printout in self.output_log:
+            if printout["step"] == self.step:
+                self.print_cache.append(printout["print"])
+            elif printout["step"] > self.step:
+                break
+
+        if self.print_cache:
+            wrapped_text = wrap_text(self.print_cache, self.out_sec_width_char)
+
+            start = len(wrapped_text) - self.out_sec_height_char
+            if start < 0:
+                start = 0
+
+            displayed_lines = wrapped_text[start:]
+
+            # calculate the starting position of the print output section
+            x_s = self.config.CONTAINER_PADDING + self.config.OP_XSTART
+            y_s = self.config.CONTAINER_PADDING + self.config.OP_YSTART
+
+            for i, line in enumerate(displayed_lines):
+                y_t = y_s + self.config.LINE_SPACING + self.font_height * (i + 1)
+                y_b = y_t - self.font_height - 2 * self.config.LINE_SPACING
+
+                # draw the text for this line
+                self.frame_drawer.text((x_s, y_b), line, font=self.config.main_font,
+                                       fill=self.config.Colors.text_default)
 
     def gen_vars(self):
         # print("build variables section")  # DEBUG
@@ -172,7 +215,7 @@ class VideoLogger:
         x_s = self.config.CONTAINER_PADDING + self.config.SRC_XSTART
         y_s = self.config.CONTAINER_PADDING + self.config.SRC_YSTART
 
-        for i , (line, is_highlighted) in enumerate(displayed_lines):
+        for i, (line, is_highlighted) in enumerate(displayed_lines):
             y_t = y_s + self.config.LINE_SPACING + self.font_height * (i + 1)
             y_b = y_t - self.font_height - 2 * self.config.LINE_SPACING
 
@@ -227,7 +270,8 @@ class VideoLogger:
         prYellow("# Generating video rendering of PyBud program flow... #")
         # init video writer
         if ".mp4" in vid_path:
-            writer: OutputEncoder = MP4Encoder(vid_path, self.config.fps, self.config.output_width, self.config.output_height)
+            writer: OutputEncoder = MP4Encoder(vid_path, self.config.fps, self.config.output_width,
+                                               self.config.output_height)
         else:
             writer: OutputEncoder = GIFEncoder(vid_path, self.config.fps)
 
@@ -239,6 +283,7 @@ class VideoLogger:
 
         self.init_frame_props()  # init frame properties, ie padding, text size, etc.
         self.vars_log = self.log_file["vars_log"]  # grab the variable log
+        self.output_log = self.log_file["print_log"]  # grab stdout log
 
         for step, contents in self.log_file["steps"].items():  # draw and write frame for each step
             self.step = int(step)
@@ -250,7 +295,10 @@ class VideoLogger:
 
 
 def wrap_text(text, cols):
-    lines = text.split("\n")
+    if isinstance(text, str):
+        lines = text.split("\n")
+    else:
+        lines = text
 
     # Wrap text
     wrapped_lines = []

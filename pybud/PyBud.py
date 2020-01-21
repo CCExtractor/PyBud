@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import copy
+import io
 import sys
 import time
 
@@ -19,6 +20,9 @@ class PyBud:
         self.lines_log = {}
         self.ex_time = None
         self.lst_time = None
+        self.print_log = []
+        self.stdout_buffer = io.StringIO()
+        self.last_stdout_len = 0
         self.Differ = DiffFinder()
 
     def reset(self):
@@ -28,6 +32,9 @@ class PyBud:
         self.cached_vars = {}
         self.vars_log = {}
         self.lines_log = {}
+        self.print_log = []
+        self.stdout_buffer = io.StringIO()
+        self.last_stdout_len = 0
 
     def run_debug(self, output_path, function, args):
         """
@@ -39,15 +46,21 @@ class PyBud:
             :param args: The arguments you wish to pass to the function, in tuple format ie. '("one", 2, 4).
         """
         self.reset()
-
         self.func_name = function.__name__
 
-        sys.settrace(self.trace_calls)
+        # capture stdout
+        real_stdout = sys.stdout
+        sys.stdout = self.stdout_buffer
 
+        sys.settrace(self.trace_calls)
         self.ex_time = self.lst_time = time.time_ns()  # log start time
+
         ret = function(*args)  # call the method
         sys.settrace(None)  # turn off debug tracing after function finish
         self.ex_time = time.time_ns() - self.ex_time  # calculate time spent executing function
+
+        # release stdout
+        sys.stdout = real_stdout
 
         output = dict()  # create output
 
@@ -58,6 +71,7 @@ class PyBud:
         output["steps"] = self.steps
         output["vars_log"] = self.vars_log
         output["lines_log"] = self.lines_log
+        output["print_log"] = self.print_log
 
         # save the dict to a file as json
         json_helper.dict_to_json_file(output, output_path)
@@ -67,13 +81,20 @@ class PyBud:
     def trace_calls(self, frame, event, arg):
         co = frame.f_code  # ref to code object
         self.line = frame.f_lineno  # initialize line number before we start debugging the lines
-        if self.func_name == (curr_fun := co.co_name):  # check if in desired function
+        if self.func_name == co.co_name:  # check if in desired function
             self.func_path = co.co_filename
             return self.trace_lines
 
     def trace_lines(self, frame, event, arg):
         # immediately log the change in time since last step/line
         diff = time.time_ns() - self.lst_time
+
+        # TODO: tree printfs instead of capturing them
+        this_out = self.stdout_buffer.getvalue()
+        new_out = this_out[self.last_stdout_len:].rstrip("\n")
+        if new_out:
+            self.print_log.append({"step": self.step, "print": new_out})
+        self.last_stdout_len = len(this_out)
 
         this_step = self.steps[self.step] = dict()
         this_step["ts"] = time.time()  # log timestamp for this step
