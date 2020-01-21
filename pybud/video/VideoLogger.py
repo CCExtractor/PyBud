@@ -16,17 +16,12 @@ from pybud.video.video_config_handler import *
 class VideoLogger:
     def __init__(self, log_path, config_path=str(Path(__file__).parent / "config.yml")):
         self.log_file = json_helper.json_file_to_dict(log_path)
-
-        mod_name = Path(self.log_file["func_path"]).stem
-        mod_spec = importlib.util.spec_from_file_location(mod_name, self.log_file["func_path"])
-        module = importlib.util.module_from_spec(mod_spec)
-        mod_spec.loader.exec_module(module)
-        func = getattr(module, self.log_file["func_name"])
-
         self.config = VideoCFG(config_path)
 
         # file text
-        self.src, self.first_line = inspect.getsourcelines(func)
+        self.src = Path(self.log_file["func_path"]).read_text().splitlines()
+        self.src_start_index = None
+        self.src_end_index = None
 
         # variable section helpers
         self.vars_cache = {}
@@ -48,6 +43,7 @@ class VideoLogger:
         self.var_sec_height_char = None
 
         self.src_sec_width_char = None
+        self.src_sec_height_char = None
 
     def init_frame_props(self):
         # print("init frame props")  # DEBUG
@@ -60,10 +56,11 @@ class VideoLogger:
 
         self.font_height = self.font_height * (1.0 + 2 * self.config.LINE_SPACING)
 
-        self.var_sec_width_char = (self.config.VAR_XEND - self.config.VAR_XSTART - 2 * self.config.CONTAINER_PADDING) // self.font_width
-        self.var_sec_height_char = (self.config.VAR_YEND - self.config.VAR_YSTART - 2 * self.config.CONTAINER_PADDING) // self.font_height
+        self.var_sec_width_char = int((self.config.VAR_XEND - self.config.VAR_XSTART - 2 * self.config.CONTAINER_PADDING) / self.font_width)
+        self.var_sec_height_char = int((self.config.VAR_YEND - self.config.VAR_YSTART - 2 * self.config.CONTAINER_PADDING) / self.font_height)
 
-        self.src_sec_width_char = (self.config.SRC_XEND - self.config.SRC_XSTART - 2 * self.config.CONTAINER_PADDING) // self.font_width
+        self.src_sec_width_char = int((self.config.SRC_XEND - self.config.SRC_XSTART - 2 * self.config.CONTAINER_PADDING) / self.font_width)
+        self.src_sec_height_char = int((self.config.SRC_YEND - self.config.SRC_YSTART - 2 * self.config.CONTAINER_PADDING) / self.font_height)
 
     def gen_frame(self):
         # print("drawing frame")  # DEBUG
@@ -146,26 +143,46 @@ class VideoLogger:
 
     def gen_code(self):
         # print("build source code section")  # DEBUG
+        this_line_index = int(self.step_contents["line"]["num"] - 1)
+
+        w_lines = []
+        for i, line in enumerate(self.src):
+            wrapped = textwrap.wrap(line, width=self.src_sec_width_char)
+            if len(wrapped) == 0:
+                w_lines.append((" ", False))
+            else:
+                is_highlighed = (i == this_line_index)
+                for part in wrapped:
+                    w_lines.append((part, is_highlighed))
+
+        if self.src_start_index is None:  # first run
+            self.src_start_index = max(this_line_index - self.src_sec_height_char // 4, 0)
+            self.src_end_index = self.src_start_index + self.src_sec_height_char
+        else:
+            if this_line_index < (self.src_start_index + self.src_sec_height_char // 4):
+                self.src_start_index = int(max(this_line_index - self.src_sec_height_char // 4, 0))
+                self.src_end_index = self.src_start_index + self.src_sec_height_char
+            elif this_line_index > (self.src_end_index - self.src_sec_height_char // 4):
+                self.src_end_index = min(this_line_index + self.src_sec_height_char // 4, len(w_lines))
+                self.src_start_index = max(self.src_end_index - self.src_sec_height_char, 0)
+
+        displayed_lines = w_lines[self.src_start_index:self.src_end_index]
+
+        # calculate the starting position of the source code section
         x_s = self.config.CONTAINER_PADDING + self.config.SRC_XSTART
         y_s = self.config.CONTAINER_PADDING + self.config.SRC_YSTART
 
-        # draw the highlight rectangle
-        highlight_start = (float(self.config.SRC_XSTART),
-                           float(y_s - self.config.LINE_SPACING + (
-                                       self.step_contents["line"]["num"]
-                                       - self.first_line) * self.font_height))
-        highlight_end = (float(self.config.SRC_XEND - self.config.divider_width),
-                         float(y_s + self.config.LINE_SPACING + (
-                                     self.step_contents["line"]["num"]
-                                     - self.first_line + 1) * self.font_height))
-        self.frame_drawer.rectangle((highlight_start, highlight_end), fill=self.config.Colors.highlight)
+        for i , (line, is_highlighted) in enumerate(displayed_lines):
+            y_t = y_s + self.config.LINE_SPACING + self.font_height * (i + 1)
+            y_b = y_t - self.font_height - 2 * self.config.LINE_SPACING
 
-        # draw the lines
-        for adj_line, line in enumerate(self.src):
-            self.frame_drawer.text(
-                (x_s, y_s + adj_line * self.font_height),
-                self.src[adj_line],
-                font=self.config.main_font, fill=self.config.Colors.text_default)
+            # draw highlight if needed
+            if is_highlighted:
+                x_e = self.config.SRC_XEND - self.config.divider_width
+                self.frame_drawer.rectangle(((x_s, y_t), (x_e, y_b)), fill=self.config.Colors.highlight)
+
+            # draw the text for this line
+            self.frame_drawer.text((x_s, y_b), line, font=self.config.main_font, fill=self.config.Colors.text_default)
 
     def gen_line_info(self):
         line: dict = self.step_contents["line"]
