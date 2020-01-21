@@ -1,10 +1,14 @@
 # PyBud video logger default config
 
 fps: 2  # number of step frames per second
-resolution:  # in pixels
+frame-resolution:  # in pixels, aspect ratio must match output resolution aspect ratio to prevent stretching
   width: 1920
   height: 1080
 divider-width: 1
+
+output-resolution:  # in pixels, if using aspect ratio other than 16:9, change frame resolution to match the output aspect ratio
+  width: 1280
+  height: 720
 
 font:
   font-family: Consolas.ttf  # supported fonts are in the fonts directory

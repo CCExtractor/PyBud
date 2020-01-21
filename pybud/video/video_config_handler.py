@@ -19,18 +19,20 @@ class VideoCFG(object):
         self.intro_font = ImageFont.truetype(str(self.FONT_DIR / self.yml["intro"]["font-family"]), self.yml["intro"]["font-size"])
         self.intro_color = self.yml["intro"]["color"]
         self.watermark = self.yml["watermark"]
+        self.output_width = self.yml["output-resolution"]["width"]
+        self.output_height = self.yml["output-resolution"]["height"]
 
         # Frame properties
         self.fps = self.yml["fps"]
-        self.frame_width = self.yml["resolution"]["width"]
-        self.frame_height = self.yml["resolution"]["height"]
+        self.frame_width = self.yml["frame-resolution"]["width"]
+        self.frame_height = self.yml["frame-resolution"]["height"]
         self.divider_width = 3
 
         # Line exec section of canvas
         self.LE_XSTART = 0.0
         self.LE_XEND = 6 / 10 * self.frame_width
         self.LE_YSTART = 0.0
-        self.LE_YEND = 0.07 * self.frame_height
+        self.LE_YEND = 0.05 * self.frame_height
 
         # Variable section of canvas
         self.VAR_XSTART = self.LE_XEND
@@ -41,7 +43,7 @@ class VideoCFG(object):
         # Output section of canvas
         self.OP_XSTART = 0.0
         self.OP_XEND = self.VAR_XSTART
-        self.OP_YSTART = 0.8 * self.frame_height
+        self.OP_YSTART = 0.85 * self.frame_height
         self.OP_YEND = self.frame_height
 
         # Source code section of canvas
