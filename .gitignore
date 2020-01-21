@@ -1,10 +1,9 @@
 ### PyBud specific
 *.pybud
 *.mp4
-!recordings/*.mp4
 
-# terminalizer recording ymls
-recordings/*.yml 
+# terminalizer recordings
+recordings/
 
 ### Python template
 # Byte-compiled / optimized / DLL files
