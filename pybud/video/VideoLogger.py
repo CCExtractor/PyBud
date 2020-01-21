@@ -19,6 +19,11 @@ class VideoLogger:
         self.src_start_index = None
         self.src_end_index = None
 
+        # caching for variable section scrolling
+        self.var_start_index = None
+        self.var_end_index = None
+        self.last_change_index = 0
+
         # local caches
         self.print_cache = []
         self.vars_cache = {}
@@ -135,7 +140,7 @@ class VideoLogger:
 
                 # draw the text for this line
                 self.frame_drawer.text((x_s, y_b), line, font=self.config.main_font,
-                                       fill=self.config.Colors.text_default)
+                                       fill=self.config.Colors.orange)
 
     def gen_vars(self):
         # print("build variables section")  # DEBUG
@@ -178,8 +183,25 @@ class VideoLogger:
                 var_lines.append(
                     {"contents": " ", "color": self.config.Colors.text_default})  # add space after variable
 
-        # print the lines
         for lineno, line in enumerate(var_lines):
+            if line["color"] != self.config.Colors.text_default:
+                self.last_change_index = lineno
+
+        if self.var_start_index is None:  # first run
+            self.var_start_index = max(self.last_change_index - self.var_sec_height_char // 4, 0)
+            self.var_end_index = self.var_start_index + self.var_sec_height_char
+        else:
+            if self.last_change_index < (self.var_start_index + self.var_sec_height_char // 4):
+                self.var_start_index = int(max(self.last_change_index - self.var_sec_height_char // 4, 0))
+                self.var_end_index = self.var_start_index + self.var_sec_height_char
+            elif self.last_change_index > (self.var_end_index - self.var_sec_height_char // 4):
+                self.var_end_index = min(self.last_change_index + self.var_sec_height_char // 4, len(var_lines))
+                self.var_start_index = max(self.var_end_index - self.var_sec_height_char, 0)
+
+        displayed_lines = var_lines[self.var_start_index:self.var_end_index]
+
+        # print the lines
+        for lineno, line in enumerate(displayed_lines):
             x = self.config.VAR_XSTART + self.config.CONTAINER_PADDING
             y = self.config.VAR_YSTART + self.config.CONTAINER_PADDING + lineno * self.font_height
             self.frame_drawer.text((x, y), line["contents"], font=self.config.main_font, fill=line["color"])
@@ -198,7 +220,7 @@ class VideoLogger:
                 for part in wrapped:
                     w_lines.append((part, is_highlighed))
 
-        if self.src_start_index is None:  # first run
+        if self.src_start_index is None:  # first run TODO: start index could be off
             self.src_start_index = max(this_line_index - self.src_sec_height_char // 4, 0)
             self.src_end_index = self.src_start_index + self.src_sec_height_char
         else:
