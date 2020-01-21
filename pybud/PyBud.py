@@ -114,6 +114,8 @@ class PyBud:
             self.vars_log[new_var] = {"init": event, "changes": [], "min": value, "max": value}
         else:
             self.vars_log[new_var] = {"init": event, "changes": []}
+        # log init as a change
+        self.var_change(new_var, value)
         return {"name": new_var, "type": var_type, "val": value}  # Return event data for this variable w/o line
 
     def var_change(self, var, new_val):

@@ -88,7 +88,8 @@ class ConsoleLogger:
             if (c_len := len(var_contents["changes"])) != 0:
                 final_value = var_contents["changes"][c_len - 1]["val"]  # define final value as value of last change
                 # log the changes of this variable
-                prGreen(report_changes(var_contents["changes"], c_len))
+                if c_len != 1:
+                    prGreen(report_changes(var_contents["changes"], c_len))
             # log the final value of this variable
             prGreen(report_final_value(final_value))
 

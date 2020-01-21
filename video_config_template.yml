@@ -1,4 +1,4 @@
-# PyBud video logger default config
+# PyBud video logger template config
 
 fps: 2  # number of step frames per second
 
@@ -7,8 +7,8 @@ font:
   font-size: 20
 
 intro:
-  text: "Demo"  # leave empty if you don't want to display an intro screen
-  time: 3         # in seconds
+  text: "Selection Sort Implementation"  # leave empty if you don't want to display an intro screen
+  time: 3                                # in seconds
   font-family: Manrope-Bold.otf
   font-size: 60
   color: "#FFFFFF"

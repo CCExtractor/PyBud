@@ -59,7 +59,15 @@ def parse_args():
         const="output.mp4",
         metavar="FILE",
         help="Generate a video rendering for the PyBud debug steps of the program flow. "
-             "Optional: provide a filepath to output to, defaults to output.mp4. "
+             "Optional: provide a filepath to output to, mp4 is the only supported format, defaults to output.mp4. "
+    )
+
+    videocfg = debugging.add_argumentvideo = debugging.add_argument(
+        "-c",
+        "--video-cfg",
+        type=str,
+        metavar="CONFIG",
+        help="Path to the YAML video config file you wish to use, default configuration will be loaded if not specified. "
     )
 
     parsing = parser.add_argument_group(title="Parsing and Analysis",
@@ -74,7 +82,8 @@ def parse_args():
              "Defaults to output.pybud if a file is not specified."
     )
 
-    parsing._group_actions.append(video)  # make video option also available to parser
+    parsing._group_actions.append(video)  # make video option also available to parser group
+    parsing._group_actions.append(videocfg)  # make video config option available to parser group
 
     return parser.parse_args()
 
@@ -109,7 +118,10 @@ def main():
         debugger.run_debug(output_path, func, this_args)
 
         if args.video:  # user wants a video render
-            vlogger = VideoLogger(output_path)
+            if args.video_cfg:
+                vlogger = VideoLogger(output_path, args.video_cfg)
+            else:
+                vlogger = VideoLogger(output_path)
             vlogger.generate(args.video)
         else:  # if not, print the log in human readable form to console
             logger = ConsoleLogger(output_path)
@@ -118,7 +130,11 @@ def main():
         file_path = args.parse
 
         if args.video:  # user wants a video render
-            vlogger = VideoLogger(file_path)
+            if args.video_cfg:
+                vlogger = VideoLogger(file_path, args.video_cfg)
+            else:
+                vlogger = VideoLogger(file_path)
+            vlogger.generate(args.video)
             vlogger.generate(args.video)
         else:  # if not, print the log in human readable form to console
             logger = ConsoleLogger(file_path)
