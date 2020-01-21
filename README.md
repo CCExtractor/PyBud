@@ -2,9 +2,9 @@
 
 PyBud is a Python debugging and profiling tool that generates videos of step-by-step code execution.
 
-Here's a PyBud example output from debugging a bubble sort algorithm!
+Here's a PyBud video output from debugging the usage example below!
 
-https://streamable.com/s/9ubtq/kudngz
+![demo](https://user-images.githubusercontent.com/22671592/72781012-dd071580-3be5-11ea-97d1-83278d120560.gif)
 
 ## Installation
 
@@ -16,7 +16,7 @@ pip install pybud
 
 ## Usage Example
 
-![Usage](recordings/demo.gif)
+![Usage_Example](https://user-images.githubusercontent.com/22671592/72780894-a16c4b80-3be5-11ea-9ee3-cb138948667c.gif)
 
 ## Usage
 
