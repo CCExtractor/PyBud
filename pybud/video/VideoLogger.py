@@ -183,27 +183,30 @@ class VideoLogger:
                 var_lines.append(
                     {"contents": " ", "color": self.config.Colors.text_default})  # add space after variable
 
-        for lineno, line in enumerate(var_lines):
+        # find the last change wrapped lines index
+        for line_index, line in enumerate(var_lines):
             if line["color"] != self.config.Colors.text_default:
-                self.last_change_index = lineno
+                self.last_change_index = line_index
 
+        # calculate scroll section to display
         if self.var_start_index is None:  # first run
             self.var_start_index = max(self.last_change_index - self.var_sec_height_char // 4, 0)
             self.var_end_index = self.var_start_index + self.var_sec_height_char
         else:
             if self.last_change_index < (self.var_start_index + self.var_sec_height_char // 4):
-                self.var_start_index = int(max(self.last_change_index - self.var_sec_height_char // 4, 0))
+                self.var_start_index = max(self.last_change_index - self.var_sec_height_char // 4, 0)
                 self.var_end_index = self.var_start_index + self.var_sec_height_char
             elif self.last_change_index > (self.var_end_index - self.var_sec_height_char // 4):
                 self.var_end_index = min(self.last_change_index + self.var_sec_height_char // 4, len(var_lines))
                 self.var_start_index = max(self.var_end_index - self.var_sec_height_char, 0)
 
+        # apply scroll section slice
         displayed_lines = var_lines[self.var_start_index:self.var_end_index]
 
         # print the lines
-        for lineno, line in enumerate(displayed_lines):
+        for line_index, line in enumerate(displayed_lines):
             x = self.config.VAR_XSTART + self.config.CONTAINER_PADDING
-            y = self.config.VAR_YSTART + self.config.CONTAINER_PADDING + lineno * self.font_height
+            y = self.config.VAR_YSTART + self.config.CONTAINER_PADDING + line_index * self.font_height
             self.frame_drawer.text((x, y), line["contents"], font=self.config.main_font, fill=line["color"])
 
     def gen_code(self):
@@ -216,21 +219,23 @@ class VideoLogger:
             if len(wrapped) == 0:
                 w_lines.append((" ", False))
             else:
-                is_highlighed = (i == this_line_index)
+                is_highlighted = (i == this_line_index)
                 for part in wrapped:
-                    w_lines.append((part, is_highlighed))
+                    w_lines.append((part, is_highlighted))
 
-        if self.src_start_index is None:  # first run TODO: start index could be off
+        # calculate scroll section to display
+        if self.src_start_index is None:  # first run TODO: start index is offset due to wrapping, need to compensate
             self.src_start_index = max(this_line_index - self.src_sec_height_char // 4, 0)
             self.src_end_index = self.src_start_index + self.src_sec_height_char
         else:
             if this_line_index < (self.src_start_index + self.src_sec_height_char // 4):
-                self.src_start_index = int(max(this_line_index - self.src_sec_height_char // 4, 0))
+                self.src_start_index = max(this_line_index - self.src_sec_height_char // 4, 0)
                 self.src_end_index = self.src_start_index + self.src_sec_height_char
             elif this_line_index > (self.src_end_index - self.src_sec_height_char // 4):
                 self.src_end_index = min(this_line_index + self.src_sec_height_char // 4, len(w_lines))
                 self.src_start_index = max(self.src_end_index - self.src_sec_height_char, 0)
 
+        # apply scroll section slice
         displayed_lines = w_lines[self.src_start_index:self.src_end_index]
 
         # calculate the starting position of the source code section
@@ -255,10 +260,10 @@ class VideoLogger:
 
         text = "\n".join(textwrap.wrap(text, width=self.src_sec_width_char))
         self.frame_drawer.text((self.config.CONTAINER_PADDING + self.config.LE_XSTART, self.config.CONTAINER_PADDING),
-                               text, font=self.config.main_font,
-                               fill=self.config.Colors.orange)
+                               text, font=self.config.main_font, fill=self.config.Colors.orange)
 
     def gen_watermark(self):
+        # bottom right corner inside padding
         x = self.config.frame_width - self.config.CONTAINER_PADDING
         y = self.config.frame_height - self.config.CONTAINER_PADDING
         w_font = ImageFont.truetype(str(self.config.FONT_DIR / "UbuntuMono-B.ttf"), 40)

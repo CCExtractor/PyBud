@@ -43,7 +43,7 @@ class VideoCFG(object):
         # Output section of canvas
         self.OP_XSTART = 0.0
         self.OP_XEND = self.VAR_XSTART
-        self.OP_YSTART = 0.85 * self.frame_height
+        self.OP_YSTART = 0.89 * self.frame_height
         self.OP_YEND = self.frame_height
 
         # Source code section of canvas

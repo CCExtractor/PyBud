@@ -5,14 +5,14 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='pybud',
-    version='0.2.0',
+    version='0.2.1',
     packages=['pybud', 'pybud.tests', 'pybud.video'],
     entry_points={'console_scripts': ['pybud=pybud.main:main']},
     license='MIT',
     author='Eastan Giebler',
     author_email='kupa528@yahoo.com',
     url='https://github.com/Tantan4321/PyBud',
-    download_url='https://github.com/Tantan4321/PyBud/archive/v0.2.0.tar.gz',
+    download_url='https://github.com/Tantan4321/PyBud/archive/v0.2.1.tar.gz',
     description='A python tool for debugging and profiling python functions.',
     long_description=long_description,
     long_description_content_type='text/markdown',
