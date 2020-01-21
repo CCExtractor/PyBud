@@ -6,8 +6,8 @@ def live_header(function, args, path):
     return "# Debugging the '{}' function with arguments '{}' in the file '{}' ... #".format(function, args, path)
 
 
-def live_step(step, timestamp):
-    return "Step: {}, timestamp: {}".format(step, timestamp)
+def live_step(step):
+    return "Step {}:".format(step)
 
 
 def live_line(line, count, total):
@@ -51,8 +51,8 @@ def live_var_item_remove(variable, var_path, val):
     return ":> In variable '{}', the item '{}' was removed. It's value was: '{}'".format(variable, element, str(val))
 
 
-def report_var_init(variable, var_type, value, line):
-    return "Variable '{}' of type '{}' was initialized with value '{}' on line '{}'".format(variable, var_type, value, line)
+def report_var_init(variable, var_type, step, value, line):
+    return "Variable '{}' of type '{}' was initialized at step '{}' with value '{}' on line '{}'".format(variable, var_type, step, value, line)
 
 
 def report_var_range(min_value, max_value):
@@ -79,4 +79,34 @@ def report_exec_time(function, time):
 
 def report_line_exec(line, count, total):
     return "Line {} executed {} times, total time spent executing: {}".format(line, count, best_duration(total))
+
+
+def vid_var_init(variable, var_type, value, line):
+    return "Variable '{}' of type '{}' was initialized with value '{}' on line '{}'".format(variable, var_type, value, line)
+
+
+def vid_history_up_to_step(changes: list, step):
+    ret = ""
+    this_change = None
+    for i, change in enumerate(changes):
+        if change["step"] == step:
+            this_change = change["val"]
+        elif change["step"] > step:
+            break
+        else:
+            if i == 0:
+                ret += "line {}: '{}'".format(change["line"], change["val"])
+            elif i == len(changes):
+                ret += ", line {}: '{}'.".format(change["line"], change["val"])
+            else:
+                ret += ", line {}: '{}'".format(change["line"], change["val"])
+    return "History:\n" + ret, this_change
+
+
+def vid_change_from_to(variable, old_val, new_val):
+    return "Variable '{}': changed to '{}' from '{}'".format(variable, new_val, old_val)
+
+
+def vid_variable(variable, val):
+    return "Variable '{}': current value '{}'".format(variable, val)
 

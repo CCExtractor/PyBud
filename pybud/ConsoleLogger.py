@@ -10,8 +10,6 @@ class ConsoleLogger:
         self.file_path = file_path
 
     def print_log(self):
-        os.system('')  # allows for colors to be printed in console
-
         # parse json log file into dict
         log: dict = json_helper.json_file_to_dict(self.file_path)
 
@@ -26,7 +24,7 @@ class ConsoleLogger:
         steps: dict = log["steps"]
         for step, step_contents in steps.items():
             # log this step
-            prLightPurple("\n" + live_step(step, step_contents["ts"]))
+            prLightPurple("\n" + live_step(step), "")
 
             # log this line
             line: dict = step_contents["line"]
@@ -78,7 +76,7 @@ class ConsoleLogger:
         for var, var_contents in vars_log.items():
             # log the init props for this variable
             var_init: dict = var_contents["init"]
-            prCyan("\n" + report_var_init(var_init["name"], var_init["type"], var_init["val"], var_init["line"]))
+            prCyan("\n" + report_var_init(var_init["name"], var_init["type"], var_init["step"], var_init["val"], var_init["line"]))
 
             # check if this variable has minimum, maximum logging
             if "min" in var_contents:

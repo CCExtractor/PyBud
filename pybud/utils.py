@@ -1,12 +1,12 @@
 # Python functions to print colored text
-def prRed(skk): print("\033[91m {}\033[00m" .format(skk))
-def prGreen(skk): print("\033[92m {}\033[00m" .format(skk))
-def prYellow(skk): print("\033[93m {}\033[00m" .format(skk))
-def prLightPurple(skk): print("\033[94m {}\033[00m" .format(skk))
-def prPurple(skk): print("\033[95m {}\033[00m" .format(skk))
-def prCyan(skk): print("\033[96m {}\033[00m" .format(skk))
-def prLightGray(skk): print("\033[97m {}\033[00m" .format(skk))
-def prBlack(skk): print("\033[98m {}\033[00m" .format(skk))
+def prRed(skk, e="\n"): print("\033[91m {}\033[00m" .format(skk), end=e)
+def prGreen(skk, e="\n"): print("\033[92m {}\033[00m" .format(skk), end=e)
+def prYellow(skk, e="\n"): print("\033[93m {}\033[00m" .format(skk), end=e)
+def prLightPurple(skk, e="\n"): print("\033[94m {}\033[00m" .format(skk), end=e)
+def prPurple(skk, e="\n"): print("\033[95m {}\033[00m" .format(skk), end=e)
+def prCyan(skk, e="\n"): print("\033[96m {}\033[00m" .format(skk), end=e)
+def prLightGray(skk, e="\n"): print("\033[97m {}\033[00m" .format(skk), end=e)
+def prBlack(skk, e="\n"): print("\033[98m {}\033[00m" .format(skk), end=e)
 
 
 def best_duration(t_nanoseconds):
