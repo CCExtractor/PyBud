@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pybud.ConsoleLogger import ConsoleLogger
 from pybud.PyBud import PyBud
-from pybud.VideoLogger import VideoLogger
+from pybud.video.VideoLogger import VideoLogger
 from pybud.example import sample
 from pybud.tests.perform_tests import run_tests
 

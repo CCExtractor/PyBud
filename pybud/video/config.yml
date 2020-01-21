@@ -1,0 +1,14 @@
+# PyBud video logger default config
+
+fps: 2  # number of step frames per second
+
+font:
+  font-family: UbuntuMono-R.ttf  # supported fonts are in the fonts directory
+  font-size: 20
+
+intro:
+  text: "Selection Sort implementation"
+  time: 3
+
+
+watermark: yes  # display "Generated with PyBud" watermark
