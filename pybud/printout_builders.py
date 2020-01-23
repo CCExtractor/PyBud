@@ -110,3 +110,30 @@ def vid_change_from_to(variable, old_val, new_val):
 def vid_variable(variable, val):
     return "Variable '{}': current value '{}'".format(variable, val)
 
+
+def vid_pointer_in_list(pointer, pointer_val, list_name, list_val):
+    selected_value = list_val[int(pointer_val)]
+    index_selected_str = "["
+    for i, val in enumerate(list_val):
+        is_selected = False
+        try:
+            is_selected = (int(selected_value) == int(val))
+        except ValueError:
+            try:
+                is_selected = (float(selected_value) == float(val))
+            except ValueError:
+                is_selected = (selected_value == val)
+        if is_selected:
+            if i != 0:
+                index_selected_str += ", <<" + str(val) + ">>"
+            else:
+                index_selected_str += "<<" + str(val) + ">>"
+        else:
+            if i != 0:
+                index_selected_str += ", " + str(val)
+            else:
+                index_selected_str += str(val)
+        if i == len(list_val) - 1:
+            index_selected_str += "]"
+
+    return "The pointer '{}' points to value '{}' of the '{}' list: {}".format(pointer, selected_value, list_name, index_selected_str)

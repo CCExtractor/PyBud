@@ -15,6 +15,7 @@ class VideoCFG(object):
 
         # Variable display settings
         self.muted_variables = self.yml["muted-variables"]
+        self.pointers = self.yml["pointers"]
 
         # Display settings
         self.intro_text = self.yml["intro"]["text"]
@@ -33,7 +34,7 @@ class VideoCFG(object):
 
         # Line exec section of canvas
         self.LE_XSTART = 0.0
-        self.LE_XEND = 2 / 3 * self.frame_width
+        self.LE_XEND = 4 / 7 * self.frame_width
         self.LE_YSTART = 0.0
         self.LE_YEND = 0.07 * self.frame_height
 

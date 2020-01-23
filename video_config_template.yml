@@ -7,8 +7,9 @@ muted-variables:
   - muted_variable_name  # The name of the variable
 
 # Relationships between pointers and lists
-pointer-list:
-  - friends[name]  # Format: list[pointer]
+pointers:
+  - friends: i  # Format: 'list: i', where 'i' is a pointer into 'list'
+  - numbers: j
 
 ## Rendering
 

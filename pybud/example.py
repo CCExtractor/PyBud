@@ -16,15 +16,20 @@ def sample(a, b):
         y = x * 2
         print('Math test: ' + str(y))
 
+        friends = ['john', 'pat', 'gary', 'michael']
+        for i in range(len(friends)):
+            print("iteration {iteration} is {name}".format(iteration=i, name=friends[i]))
+
         muted_variable_name = "I, the muted variable, have changed"
 
         fl = 1.234
 
         a_string = "this is a string"
         print(a_string)
-        num_list = []
+        numbers = [45, 67, 90, 2, 78]
 
-        num_list = [500, 600, 700]
+        for j in range(len(numbers)):
+            print("number: {}".format(numbers[j]))
 
         num_list = [100, 200, 700, 800]
 
@@ -35,14 +40,12 @@ def sample(a, b):
         dict_test["one"] = 2  # text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test
 
         dict_test = {"one": 1, "two": 2}
+
         print("Test 2, test 3, Test the test?")
+
         dict_test = {"one": {"yes": "yes"}, "two": 2}
 
         dict_test["one"]["yes"] = 0
-
-        friends = ['john', 'pat', 'gary', 'michael']
-        for i, name in enumerate(friends):
-            print("iteration {iteration} is {name}".format(iteration=i, name=name))
 
 
 def nested_loop(a):

@@ -6,8 +6,9 @@ muted-variables:
   - muted_variable_name  # The name of the variable
 
 # Relationships between pointers and lists
-pointer-list:
-  - friends[name]  # Format: list[pointer]
+pointers:
+  - friends: i  # Format: 'list: i', where 'i' is a pointer into 'list'
+  - numbers: j
 
 ## Rendering
 
@@ -35,7 +36,7 @@ font:
 
 intro:
   # Leave empty if you don't want to display an intro screen
-  text: "Template"
+  text: "Demo"
   # In seconds
   time: 2
   font-family: Manrope-Bold.otf

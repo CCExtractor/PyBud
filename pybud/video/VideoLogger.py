@@ -151,40 +151,66 @@ class VideoLogger:
         # print("build variables section")  # DEBUG
         var_lines = []
         for var, var_contents in self.vars_log.items():
-            # check if this variable has been initialized yet
             var_init: dict = var_contents["init"]
-            if var_init["step"] == self.step:
-                self.vars_cache[var_init["name"]] = str(var_init["val"])
-                # wrap init text
-                for line in wrap_text(vid_var_init(var_init["name"], var_init["type"],
-                                                   var_init["val"], var_init["line"]), self.var_sec_width_char):
-                    var_lines.append({"contents": line, "color": self.config.Colors.green})
-                var_lines.append(
-                    {"contents": " ", "color": self.config.Colors.text_default})  # add space after variable
-            elif var_init["step"] < self.step:
-                if len(var_contents["changes"]) != 0:
-                    changes, this_change = vid_history_up_to_step(var_contents["changes"], self.step)
-                    if this_change is not None:
-                        # wrap variable change
-                        for line in wrap_text(vid_change_from_to(var_init["name"],
-                                                                 self.vars_cache[var_init["name"]],
-                                                                 this_change), self.var_sec_width_char):
-                            var_lines.append({"contents": line, "color": self.config.Colors.green})
-                        self.vars_cache[var_init["name"]] = this_change  # cache variable change
+            if var_init["step"] <= self.step:
+                should_continue = False
+                for relation in self.config.pointers:
+                    if var in relation.values():
+                        should_continue = True
+                    if var_init["name"] in relation:
+                        should_continue = True
+                        the_pointer = relation[var_init["name"]]
+                        if the_pointer not in self.vars_cache:
+                            self.vars_cache[the_pointer] = self.vars_log[the_pointer]["init"]["val"]
+                        else:
+                            pointer_log = self.vars_log[the_pointer]
+                            for change in pointer_log["changes"]:
+                                if change["step"] == self.step:
+                                    self.vars_cache[the_pointer] = change["val"]
+                        if var_init["name"] not in self.vars_cache:
+                            self.vars_cache[var_init["name"]] = var_init["val"]
+                        for change in var_contents["changes"]:
+                            if change["step"] == self.step:
+                                self.vars_cache[var_init["name"]] = change["val"]
+
+                        for line in wrap_text(
+                                vid_pointer_in_list(the_pointer, self.vars_cache[the_pointer],
+                                                    var_init["name"], self.vars_cache[var_init["name"]]), self.var_sec_width_char):
+                            var_lines.append({"contents": line, "color": self.config.Colors.red})
+                        var_lines.append({"contents": " ", "color": self.config.Colors.text_default})  # add new line
+                if should_continue:
+                    continue
+
+                # check if this variable has been initialized yet
+                if var_init["step"] == self.step:
+                    self.vars_cache[var_init["name"]] = str(var_init["val"])
+                    # wrap init text
+                    for line in wrap_text(vid_var_init(var_init["name"], var_init["type"],
+                                                       var_init["val"], var_init["line"]), self.var_sec_width_char):
+                        var_lines.append({"contents": line, "color": self.config.Colors.green})
+                else:
+                    if len(var_contents["changes"]) != 0:
+                        changes, this_change = vid_history_up_to_step(var_contents["changes"], self.step)
+                        if this_change is not None:
+                            # wrap variable change
+                            for line in wrap_text(vid_change_from_to(var_init["name"],
+                                                                     self.vars_cache[var_init["name"]],
+                                                                     this_change), self.var_sec_width_char):
+                                var_lines.append({"contents": line, "color": self.config.Colors.green})
+                            self.vars_cache[var_init["name"]] = this_change  # cache variable change
+                        else:
+                            # wrap variable no change
+                            for line in wrap_text(vid_variable(var_init["name"], self.vars_cache[var_init["name"]]),
+                                                  self.var_sec_width_char):
+                                var_lines.append({"contents": line, "color": self.config.Colors.text_default})
+                        # wrap changes text
+                        for line in wrap_text(changes, self.var_sec_width_char):
+                            var_lines.append({"contents": line, "color": self.config.Colors.text_default})
                     else:
                         # wrap variable no change
                         for line in wrap_text(vid_variable(var_init["name"],
                                                            self.vars_cache[var_init["name"]]), self.var_sec_width_char):
                             var_lines.append({"contents": line, "color": self.config.Colors.text_default})
-                    # wrap changes text
-                    for line in wrap_text(changes, self.var_sec_width_char):
-                        var_lines.append({"contents": line, "color": self.config.Colors.text_default})
-
-                else:
-                    # wrap variable no change
-                    for line in wrap_text(vid_variable(var_init["name"],
-                                                       self.vars_cache[var_init["name"]]), self.var_sec_width_char):
-                        var_lines.append({"contents": line, "color": self.config.Colors.text_default})
                 var_lines.append(
                     {"contents": " ", "color": self.config.Colors.text_default})  # add space after variable
 
