@@ -13,6 +13,9 @@ class VideoCFG(object):
         # Color scheme
         self.Colors = Colors()
 
+        # Variable display settings
+        self.muted_variables = self.yml["muted-variables"]
+
         # Display settings
         self.intro_text = self.yml["intro"]["text"]
         self.intro_time = self.yml["intro"]["time"]
@@ -24,13 +27,13 @@ class VideoCFG(object):
 
         # Frame properties
         self.fps = self.yml["fps"]
-        self.frame_width = self.yml["frame-resolution"]["width"]
-        self.frame_height = self.yml["frame-resolution"]["height"]
+        self.frame_width = self.yml["render-resolution"]["width"]
+        self.frame_height = self.yml["render-resolution"]["height"]
         self.divider_width = 3
 
         # Line exec section of canvas
         self.LE_XSTART = 0.0
-        self.LE_XEND = 6 / 10 * self.frame_width
+        self.LE_XEND = 2 / 3 * self.frame_width
         self.LE_YSTART = 0.0
         self.LE_YEND = 0.06 * self.frame_height
 

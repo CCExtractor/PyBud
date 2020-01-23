@@ -10,9 +10,13 @@ def sample(a, b):
         x = 8
         y = 14
 
+        muted_variable_name = "This variable should be muted in the video output"
+
         x = a + b
         y = x * 2
         print('Math test: ' + str(y))
+
+        muted_variable_name = "I, the muted variable, have changed"
 
         fl = 1.234
 
@@ -28,10 +32,11 @@ def sample(a, b):
 
         dict_test = dict()
 
-        dict_test["one"] = 2
+        dict_test["one"] = 2  # text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test
+
         dict_test = {"one": 1, "two": 2}
         print("Test 2, test 3, Test the test?")
-        dict_test = {"one": {"yes": "yes"}, "two": 2}  # text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test text wrapping test
+        dict_test = {"one": {"yes": "yes"}, "two": 2}
 
         dict_test["one"]["yes"] = 0
 

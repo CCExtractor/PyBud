@@ -115,9 +115,11 @@ class VideoLogger:
 
     def gen_output(self):
         # print("build output section")  # DEBUG
-        for printout in self.output_log:
+        output_copy = self.output_log
+        for printout in output_copy:
             if printout["step"] == self.step:
                 self.print_cache.append(printout["print"])
+                self.output_log.remove(printout)  # pop print from log
             elif printout["step"] > self.step:
                 break
 
@@ -293,6 +295,11 @@ class VideoLogger:
         # resize image to output resolution
         self.resize_frame()
 
+    def mute_variables(self):
+        # print("removing muted variables...")
+        for var in self.config.muted_variables:
+            del self.vars_log[str(var)]
+
     def generate(self, vid_path):
         prYellow("# Generating video rendering of PyBud program flow... #")
         # init video writer
@@ -311,6 +318,9 @@ class VideoLogger:
         self.init_frame_props()  # init frame properties, ie padding, text size, etc.
         self.vars_log = self.log_file["vars_log"]  # grab the variable log
         self.output_log = self.log_file["print_log"]  # grab stdout log
+
+        # mute variables
+        self.mute_variables()
 
         for step, contents in self.log_file["steps"].items():  # draw and write frame for each step
             self.step = int(step)

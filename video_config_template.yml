@@ -1,24 +1,47 @@
-# PyBud video logger template config
+### PyBud video logger template config
 
-fps: 2  # number of step frames per second
-frame-resolution:  # in pixels, aspect ratio must match output resolution aspect ratio to prevent stretching
+## Debugger variable display settings
+
+# The names of variables you wish to mute in the PyBud video output
+muted-variables:
+  - muted_variable_name  # The name of the variable
+
+# Relationships between pointers and lists
+pointer-list:
+  - friends[name]  # Format: list[pointer]
+
+## Rendering
+
+# Number of step frames per second
+fps: 2
+
+# The resolution of the base rendering, in pixels
+# Note: aspect ratio must match output resolution aspect ratio to prevent stretching
+render-resolution:
   width: 1920
   height: 1080
 divider-width: 1
 
-output-resolution:  # in pixels, if using aspect ratio other than 16:9, change frame resolution to match the output aspect ratio
+# The desired resolution of the video output, in pixels
+# If using aspect ratio other than 16:9, change render resolution so that
+# the render aspect ratio matches the output aspect ratio
+output-resolution:
   width: 1280
   height: 720
 
 font:
-  font-family: Consolas.ttf  # supported fonts are in the fonts directory
+  # Supported fonts are in the fonts directory
+  font-family: Consolas.ttf
   font-size: 22
 
 intro:
-  text: "Template"  # leave empty if you don't want to display an intro screen
-  time: 2         # in seconds
+  # Leave empty if you don't want to display an intro screen
+  text: "Template"
+  # In seconds
+  time: 2
   font-family: Manrope-Bold.otf
   font-size: 60
   color: "#FFFFFF"
 
-watermark: yes  # display "Generated with PyBud" watermark
+# Display "Generated with PyBud" watermark
+watermark: yes
