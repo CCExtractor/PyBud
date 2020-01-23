@@ -4,7 +4,7 @@ PyBud is a Python debugging and profiling tool that generates videos of step-by-
 
 Here's a PyBud video output from debugging the usage example below!
 
-![Demo](https://user-images.githubusercontent.com/22671592/72841585-4aee2400-3c5c-11ea-80fe-cad0c51bb5b4.gif)
+![Demo](https://user-images.githubusercontent.com/22671592/72966758-4cffd200-3d85-11ea-9602-2b215a315565.gif)
 
 ## Installation
 
