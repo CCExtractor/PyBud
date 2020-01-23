@@ -126,7 +126,7 @@ class VideoLogger:
         if self.print_cache:
             wrapped_text = wrap_text(self.print_cache.rstrip(), self.out_sec_width_char)
 
-            start = len(wrapped_text) - self.out_sec_height_char
+            start = len(wrapped_text) - self.out_sec_height_char - 1
             if start < 0:
                 start = 0
 
@@ -216,7 +216,7 @@ class VideoLogger:
 
     def gen_code(self):
         # print("build source code section")  # DEBUG
-        this_line_index = int(self.step_contents["line"]["num"] - 1)
+        original_line_index = this_line_index = int(self.step_contents["line"]["num"] - 1)
 
         w_lines = []
         for i, line in enumerate(self.src):
@@ -224,12 +224,14 @@ class VideoLogger:
             if len(wrapped) == 0:
                 w_lines.append((" ", False))
             else:
-                is_highlighted = (i == this_line_index)
-                for part in wrapped:
+                is_highlighted = (i == original_line_index)
+                for j, part in enumerate(wrapped):
+                    if i < original_line_index and j > 0:
+                        this_line_index += 1
                     w_lines.append((part, is_highlighted))
 
         # calculate scroll section to display
-        if self.src_start_index is None:  # first run TODO: start index is offset due to wrapping, need to compensate
+        if self.src_start_index is None:  # first run
             self.src_start_index = max(this_line_index - self.src_sec_height_char // 4, 0)
             self.src_end_index = self.src_start_index + self.src_sec_height_char
         else:
