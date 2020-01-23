@@ -16,7 +16,7 @@ pip install pybud
 
 ## Usage Example
 
-![Usage_Example](https://user-images.githubusercontent.com/22671592/72780894-a16c4b80-3be5-11ea-9ee3-cb138948667c.gif)
+![Usage_Example](https://user-images.githubusercontent.com/22671592/72948262-4011bd00-3d4a-11ea-86e3-c06b99fde817.gif)
 
 ## Usage
 
