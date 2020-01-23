@@ -6,7 +6,7 @@ def sample(a, b):
     Test case 1
     """
     for _ in range(2):
-        print("yes")
+        print("yes \n ")
         x = 8
         y = 14
 

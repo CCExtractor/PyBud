@@ -35,7 +35,7 @@ class VideoCFG(object):
         self.LE_XSTART = 0.0
         self.LE_XEND = 2 / 3 * self.frame_width
         self.LE_YSTART = 0.0
-        self.LE_YEND = 0.06 * self.frame_height
+        self.LE_YEND = 0.07 * self.frame_height
 
         # Variable section of canvas
         self.VAR_XSTART = self.LE_XEND

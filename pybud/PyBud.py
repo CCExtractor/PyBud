@@ -91,7 +91,7 @@ class PyBud:
 
         # TODO: tree printfs instead of capturing them
         this_out = self.stdout_buffer.getvalue()
-        new_out = this_out[self.last_stdout_len:].rstrip("\n")
+        new_out = this_out[self.last_stdout_len:]
         if new_out:
             self.print_log.append({"step": self.step, "print": new_out})
         self.last_stdout_len = len(this_out)

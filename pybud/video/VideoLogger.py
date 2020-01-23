@@ -25,7 +25,7 @@ class VideoLogger:
         self.last_change_index = 0
 
         # local caches
-        self.print_cache = []
+        self.print_cache = ""
         self.vars_cache = {}
 
         # log data
@@ -118,19 +118,22 @@ class VideoLogger:
         output_copy = self.output_log
         for printout in output_copy:
             if printout["step"] == self.step:
-                self.print_cache.append(printout["print"])
+                self.print_cache += printout["print"]
                 self.output_log.remove(printout)  # pop print from log
             elif printout["step"] > self.step:
                 break
 
         if self.print_cache:
-            wrapped_text = wrap_text(self.print_cache, self.out_sec_width_char)
+            wrapped_text = wrap_text(self.print_cache.rstrip(), self.out_sec_width_char)
 
             start = len(wrapped_text) - self.out_sec_height_char
             if start < 0:
                 start = 0
 
             displayed_lines = wrapped_text[start:]
+            # remove non-displayed lines from cache
+            for old in wrapped_text[:start]:
+                self.print_cache = self.print_cache.replace(old, "", 1).lstrip()
 
             # calculate the starting position of the print output section
             x_s = self.config.CONTAINER_PADDING + self.config.OP_XSTART
