@@ -8,6 +8,12 @@ Here's a PyBud video output from debugging the usage example below!
 
 ## Installation
 
+### Python version
+
+More than or equal to python3.8
+
+### Installation using pip
+
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install PyBud.
 
 ```bash
