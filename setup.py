@@ -18,7 +18,7 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     include_package_data=True,
     keywords=['debugger', 'tool', 'python', 'video'],
-    install_requires=['dictdiffer==0.8.1', 'Pillow==7.0.0', 'opencv-python', 'numpy', 'pyyaml'],
+    install_requires=['dictdiffer==0.8.1', 'Pillow==8.2.0', 'opencv-python', 'numpy', 'pyyaml'],
     python_requires='>=3.6',
     classifiers=[
         'Development Status :: 4 - Beta',
